@@ -1,4 +1,4 @@
-import CreatePatrimony from "@/components/patrimony-create"
+import CreatePatrimony from "@/components/patrimony/patrimony-create"
 
 const Page=()=>{
    return <CreatePatrimony/>
