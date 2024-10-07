@@ -115,7 +115,7 @@ const Page: React.FC = () => {
                         />
                     </div>
                     <div>
-                        <label className="block text-gray-700">Date d'Acquisition</label>
+                        <label className="block text-gray-700">Date d&apos;Acquisition</label>
                         <input
                             type="date"
                             value={newPossession.dateAcquisition}
@@ -124,7 +124,7 @@ const Page: React.FC = () => {
                         />
                     </div>
                     <div>
-                        <label className="block text-gray-700">Taux d'Appréciation Annuelle (%)</label>
+                        <label className="block text-gray-700">Taux d&apos;Appréciation Annuelle (%)</label>
                         <input
                             type="number"
                             value={newPossession.tauxDAppreciationAnnuelle}
