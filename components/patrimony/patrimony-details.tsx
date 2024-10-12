@@ -1,4 +1,4 @@
-type PatrimonyType={
+export type PatrimonyType={
     nom:string,
     t:string,
     valeurComptable:number

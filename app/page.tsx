@@ -16,18 +16,20 @@ import {
 
 import { Input } from "@/components/ui/input";
 
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 
 import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { url } from "@/lib/api-url";
+import { useAuthStore } from "@/store/auth-store";
 
 const formSchema = z.object({
     email: z.string(),
     password: z.string().min(6),
 });
 
-export default function Home() {
+export default function Login() {
+
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -38,28 +40,20 @@ export default function Home() {
     });
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
-        
-        try {
-            // Example: Sending data to an API endpoint
-            const response = await fetch(`${url}/token`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(values),
-            });
+      const result= await signIn("credentials",{
+        email:values.email,
+        password:values.password,
+        redirect:false
+      })
+      if (result?.error) {
+        alert(result.error)
     
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
+    }
+     else {
+        alert("you are authenticated")
+     }
+
     
-            const data = await response.text();
-            console.log('Login successful:', data);
-            // Handle successful login (e.g., redirect, show success message)
-        } catch (error) {
-            console.error('Error submitting form:', error);
-            // Handle error (e.g., show error message)
-        }
     }
 
     return (

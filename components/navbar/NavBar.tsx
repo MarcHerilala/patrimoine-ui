@@ -1,9 +1,11 @@
+"use client"
 import * as React from "react";
 import { ModeToggle } from "./modeToggle";
 import { Input } from "../ui/input";
 import Image from "next/image";
 import Link from "next/link";
 import User, { UserRound } from "lucide-react"
+import { useSession } from "next-auth/react";
 
 const links = [
     {
@@ -20,6 +22,8 @@ const links = [
 ];
 
 const Navbar = () => {
+    const {data:session,status}=useSession()
+    
     return (
         <nav className="ease-in-outs custom-filter sticky top-0 z-30 w-full border-b border-accent py-3 transition duration-300 md:bg-background/90">
             <div className="container mx-auto px-6">
@@ -38,7 +42,7 @@ const Navbar = () => {
                                 <div>
                                      <UserRound/>
                                 </div>
-                                <div>user@gmail.com</div>
+                                <div>{session?.user?.email}</div>
                             </div>
                         </div>
                     </div>
