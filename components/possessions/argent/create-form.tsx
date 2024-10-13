@@ -29,9 +29,13 @@ import { useSession } from "next-auth/react";
 const formSchema = z.object({
     nom: z.string().nonempty(),
     t: z.string(),
-    dateOuverture:z.string(),
-    valeurComptable: z.number().min(0),
+    dateOuverture: z.string(),
+    valeurComptable: z
+        .string()
+        .nonempty()
+        .transform((val) => Number(val)), // Transforme la chaîne en nombre
 });
+
 
 export default function CreateMoneyForm() {
 
@@ -52,12 +56,13 @@ export default function CreateMoneyForm() {
         
         try {
             // Example: Sending data to an API endpoint
+            const dataToSend=[values]
             const response = await fetch(`${url}/patrimoines/patrimoine/possessions/argent?email=${session?.user?.email}`, {
-                method: 'POST',
+                method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(values),
+                body: JSON.stringify(dataToSend),
             });
     
             console.log("io ny url ",url);
@@ -76,16 +81,14 @@ export default function CreateMoneyForm() {
     }
 
     return (
-        <div className="container h-[calc(100vh-320px)]">
+        <div className="container">
             <div className="flex h-full flex-grow items-center justify-center">
-                <div className="mx-auto w-full max-w-[375px]">
-                    <div className="my-8">
-                        <h1 className="mb-2 text-3xl text-center">patrimoine management</h1>
-                    </div>
+                <div className=" w-full max-w-[375px]">
+                   
                     <Form {...form}>
                         <form
                             onSubmit={form.handleSubmit(onSubmit)}
-                            className="space-y-6 grid grid-cols-2"
+                            className="space-y-6 flex flex-col "
                         >
                             <FormField
                                 control={form.control}

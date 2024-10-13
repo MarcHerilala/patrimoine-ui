@@ -1,6 +1,6 @@
 
 "use client"
-import z from "zod";
+import z, { number } from "zod";
 import { ErrorOption, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -27,13 +27,14 @@ import { useSession } from "next-auth/react";
 
 
 const formSchema = z.object({
-    nom: z.string().nonempty(),
+    nom: z.string(),
     t: z.string(),
-    dateOuverture:z.string(),
-    valeurComptable: z.number().min(0),
+    valeurComptable: z.string(),
+    dateAcquisition:z.string(),
+    tauxDAppreciationAnnuelle:z.string()
 });
 
-export default function CreateMoneyForm() {
+export default function CreateMaterialForm() {
 
     const {data:session}=useSession()
 
@@ -42,7 +43,9 @@ export default function CreateMoneyForm() {
         defaultValues: {
             nom: "",
             t: "",
-            valeurComptable: 0,
+            valeurComptable: "",
+            dateAcquisition:"",
+            tauxDAppreciationAnnuelle:""
          
         },
     });
@@ -50,13 +53,15 @@ export default function CreateMoneyForm() {
     async function onSubmit(values: z.infer<typeof formSchema>) {
         
         try {
+
+            const valuesToSubmit=[values]
             // Example: Sending data to an API endpoint
             const response = await fetch(`${url}/patrimoines/patrimoine/possessions/materiel?email=${session?.user?.email}`, {
-                method: 'POST',
+                method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(values),
+                body: JSON.stringify(valuesToSubmit),
             });
     
             console.log("io ny url ",url);
@@ -75,16 +80,14 @@ export default function CreateMoneyForm() {
     }
 
     return (
-        <div className="container h-[calc(100vh-320px)]">
+        <div className="container ">
             <div className="flex h-full flex-grow items-center justify-center">
                 <div className="mx-auto w-full max-w-[375px]">
-                    <div className="my-8">
-                        <h1 className="mb-2 text-3xl text-center">patrimoine management</h1>
-                    </div>
+                   
                     <Form {...form}>
                         <form
                             onSubmit={form.handleSubmit(onSubmit)}
-                            className="space-y-6 grid grid-cols-2"
+                            className="space-y-6 flex-col gap-1"
                         >
                             <FormField
                                 control={form.control}
@@ -121,23 +124,7 @@ export default function CreateMoneyForm() {
                                     </FormItem>
                                 )}
                             />
-                             <FormField
-                                control={form.control}
-                                name="dateOuverture"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>date ouverture</FormLabel>
-                                        <FormControl>
-                                            <Input
-                                                type="date"
-                                                placeholder="date"
-                                                {...field}
-                                            />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
+                             
 
                             <FormField
                                 control={form.control}
@@ -145,6 +132,32 @@ export default function CreateMoneyForm() {
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel>valeur comptable</FormLabel>
+                                        <FormControl>
+                                            <Input type="number" {...field} />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                              <FormField
+                                control={form.control}
+                                name="dateAcquisition"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>date acquisition</FormLabel>
+                                        <FormControl>
+                                            <Input type="date" {...field} />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                              <FormField
+                                control={form.control}
+                                name="tauxDAppreciationAnnuelle"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>taux d appreciation annuelle</FormLabel>
                                         <FormControl>
                                             <Input type="number" {...field} />
                                         </FormControl>

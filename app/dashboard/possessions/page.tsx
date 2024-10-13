@@ -1,6 +1,10 @@
 "use client";
 import { url } from "@/lib/api-url";
-import React, { useEffect, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
+import { DialogBoilerplate } from "@/components/dialog";
+import CreateMoneyForm from "@/components/possessions/argent/create-form";
+import CreateMaterialForm from "@/components/possessions/material/create-form";
+
 
 interface Possession {
     nom: string;
@@ -14,30 +18,9 @@ const Page: React.FC = () => {
     const [possessions, setPossessions] = useState<Possession[]>([
       
     ]);
-
-    const [selectedDates, setSelectedDates] = useState<string[]>(
-        possessions.map(() => new Date().toISOString().split("T")[0])
-    );
-
-    const [newPossession, setNewPossession] = useState<Possession>({
-        nom: "",
-        t:"",
-        valeurComptable: 0,
-        devise:"",
-    });
+    const [possessionType,setPossessionType]=useState("argent")
 
 
-
-    const addPossession = () => {
-        setPossessions([...possessions, newPossession]);
-        setSelectedDates([...selectedDates, new Date().toISOString().split("T")[0]]);
-        setNewPossession({
-            nom: "",
-            t:"",
-            valeurComptable: 0,
-            devise: "",
-        });
-    };
 
 
     const getPossessions=async ()=>{
@@ -53,18 +36,43 @@ const Page: React.FC = () => {
             
         }
     }
+    console.log("io ny type de possession",possessionType);
+    const handleOnTypeChange=(e:ChangeEvent<HTMLSelectElement>)=>{
+        setPossessionType(e.target.value)
+    }
+    
 
     useEffect(()=>{
         getPossessions()
     },[])
     return (
 <div className="bg-gray-100">
+        {/* 
         <button
         onClick={addPossession}
         className="bg-blue-500 text-white mt-4 px-4 py-2 rounded-md hover:bg-blue-600"
         >
         Ajouter Possession
         </button>
+        */}
+        <DialogBoilerplate title="create new posession" key={"1"} description=""  triggerText="+ create possession">
+            <div className="flex flex-col gap-2 ml-8 w-[314px]">
+                <label htmlFor="">type</label>
+                <select  className="bg-transparent border outline-none rounded-sm h-10"
+                onChange={handleOnTypeChange}
+                >
+                    <option value="argent">argent</option>
+                    <option value="materiel">materiel</option>
+                </select>
+            </div>
+            {
+                    possessionType === "argent" ? (
+                        <CreateMoneyForm />
+                    ) : possessionType === "materiel" ? (
+                        <CreateMaterialForm />
+                    ) : null
+}
+        </DialogBoilerplate>
         <div className="mt-6 mx-4 h-full">
            
             <div className="w-full space-y-4">
