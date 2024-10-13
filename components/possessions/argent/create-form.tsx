@@ -21,36 +21,30 @@ import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { url } from "@/lib/api-url";
+import { useSession } from "next-auth/react";
 
 
-const deviseSchema = z.object({
-    nom: z.string(),
-    valeurEnAriary: z.number().min(1),
-    t: z.string().refine((date) => /^\d{4}-\d{2}-\d{2}$/.test(date), "Invalid date format"),
-    tauxDappréciationAnnuel: z.number().min(0),
-  });
+
 
 const formSchema = z.object({
     nom: z.string().nonempty(),
     t: z.string(),
+    dateOuverture:z.string(),
     valeurComptable: z.number().min(0),
-    devise: deviseSchema,
 });
 
 export default function CreateMoneyForm() {
+
+    const {data:session}=useSession()
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
             nom: "",
             t: "",
+            dateOuverture:"",
             valeurComptable: 0,
-            devise: {
-              nom: "",
-              valeurEnAriary: 0,
-              t: "",
-              tauxDappréciationAnnuel: 0,
-            },
+         
         },
     });
 
@@ -58,7 +52,7 @@ export default function CreateMoneyForm() {
         
         try {
             // Example: Sending data to an API endpoint
-            const response = await fetch(`${url}/register`, {
+            const response = await fetch(`${url}/patrimoines/patrimoine/possessions/argent?email=${session?.user?.email}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -72,7 +66,7 @@ export default function CreateMoneyForm() {
                 throw new Error('Network response was not ok');
             }
     
-            const data = await response.text;
+            const data = await response.json();
             console.log('Login successful:', data);
             // Handle successful login (e.g., redirect, show success message)
         } catch (error) {
@@ -119,7 +113,24 @@ export default function CreateMoneyForm() {
                                         <FormLabel>date</FormLabel>
                                         <FormControl>
                                             <Input
-                                                type="text"
+                                                type="date"
+                                                placeholder="date"
+                                                {...field}
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                             <FormField
+                                control={form.control}
+                                name="dateOuverture"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>date ouverture</FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                type="date"
                                                 placeholder="date"
                                                 {...field}
                                             />
@@ -142,59 +153,7 @@ export default function CreateMoneyForm() {
                                     </FormItem>
                                 )}
                             />
-                             <FormField
-                                control={form.control}
-                                name="devise.t"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>date de devise</FormLabel>
-                                        <FormControl>
-                                            <Input type="text" {...field} />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-                            
-                            <FormField
-                                control={form.control}
-                                name="devise.nom"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>devise</FormLabel>
-                                        <FormControl>
-                                            <Input type="text" {...field} />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-                            <FormField
-                                control={form.control}
-                                name="devise.tauxDappréciationAnnuel"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>taux dappréciation annuel</FormLabel>
-                                        <FormControl>
-                                            <Input type="number" {...field} />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-                            <FormField
-                                control={form.control}
-                                name="devise.valeurEnAriary"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>valeur en ariary</FormLabel>
-                                        <FormControl>
-                                            <Input type="number" {...field} />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
+                             
                             <Button className="w-full" type="submit">
                                 Submit
                             </Button>
