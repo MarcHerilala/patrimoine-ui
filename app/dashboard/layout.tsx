@@ -12,19 +12,26 @@ import {
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
+import { signOut } from "next-auth/react";
 
 export default function ProductDetailLayout({
     children,
 }: {
     children: React.ReactNode;
 }) {
+
+    const handleSignOut=()=>{
+        signOut({
+            callbackUrl:"/"
+        })
+    }
     return (
         <>
             <div className="relative flex h-full min-h-screen">
                 <div className="fixed bottom-0 z-20 flex w-full cursor-pointer flex-col gap-4 px-4 sm:hidden">
                     <MobileNavigation />
                 </div>
-                <div className="fixed hidden h-screen w-48 flex-col border-r bg-neutral-50 bg-opacity-100 dark:bg-neutral-950 md:flex">
+                <div className="fixed hidden h-auto w-48 flex-col  border-r bg-neutral-50 bg-opacity-100 dark:bg-neutral-950 md:flex">
                     <div className="my-10 flex flex-col font-bold text-neutral-700">
                         <NavItem
                             link={"/dashboard"}
@@ -42,7 +49,7 @@ export default function ProductDetailLayout({
                             Icon={<MessagesSquare size={20} />}
                         />
                     </div>
-                    <div className="mt-auto border-y">
+                    <div className="mt-[280px] border-y" onClick={handleSignOut}>
                         <div className="flex cursor-pointer items-center gap-4 border-l-4 border-transparent p-4 text-sm hover:border-neutral-800 hover:bg-white">
                             <LogOut size={20} />
                             <p>Logout</p>

@@ -16,11 +16,8 @@ import {
 
 import { Input } from "@/components/ui/input";
 
-import { useRouter } from "next/navigation";
-
-import { signIn } from "next-auth/react";
-import Link from "next/link";
 import { url } from "@/lib/api-url";
+import { useSession } from "next-auth/react";
 
 const formSchema = z.object({
     nom: z.string(),
@@ -28,6 +25,7 @@ const formSchema = z.object({
 });
 
 export default function CreatePatrimony() {
+    const {data:session}=useSession()
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -41,7 +39,7 @@ export default function CreatePatrimony() {
         
         try {
             // Example: Sending data to an API endpoint
-            const response = await fetch(`${url}/patrimoines?email=marc@gmail.com`, {
+            const response = await fetch(`${url}/patrimoines?email=${session?.user?.email}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -56,6 +54,7 @@ export default function CreatePatrimony() {
             const data = await response.json();
             console.log('Login successful:', data);
             // Handle successful login (e.g., redirect, show success message)
+            
         } catch (error) {
             console.error('Error submitting form:', error);
             // Handle error (e.g., show error message)

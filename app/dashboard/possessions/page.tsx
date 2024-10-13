@@ -4,6 +4,7 @@ import React, { ChangeEvent, useEffect, useState } from "react";
 import { DialogBoilerplate } from "@/components/dialog";
 import CreateMoneyForm from "@/components/possessions/argent/create-form";
 import CreateMaterialForm from "@/components/possessions/material/create-form";
+import { useSession } from "next-auth/react";
 
 
 interface Possession {
@@ -19,13 +20,15 @@ const Page: React.FC = () => {
       
     ]);
     const [possessionType,setPossessionType]=useState("argent")
+    
+    const {data:session}=useSession()
 
 
 
 
     const getPossessions=async ()=>{
         try{
-            const response=await fetch(`${url}/patrimoines/patrimoine/possessions?email=john@gmail.com`)
+            const response=await fetch(`${url}/patrimoines/patrimoine/possessions?email=${session?.user?.email}`)
             if(!response.ok){
                 throw new Error("error while fetching data")
             }
@@ -43,8 +46,11 @@ const Page: React.FC = () => {
     
 
     useEffect(()=>{
+        if(!session){
+            return
+        }
         getPossessions()
-    },[])
+    },[session])
     return (
 <div className="bg-gray-100">
         {/* 

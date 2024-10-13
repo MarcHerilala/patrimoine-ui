@@ -13,10 +13,10 @@ import {
     FormLabel,
     FormMessage,
 } from "@/components/ui/form";
+import { useRouter } from "next/navigation";
 
 import { Input } from "@/components/ui/input";
 
-import { useRouter } from "next/navigation";
 
 import { signIn } from "next-auth/react";
 import Link from "next/link";
@@ -39,6 +39,8 @@ export default function Home() {
         },
     });
 
+    const router=useRouter()
+
     async function onSubmit(values: z.infer<typeof formSchema>) {
         
         try {
@@ -57,8 +59,21 @@ export default function Home() {
                 throw new Error('Network response was not ok');
             }
     
+
             const data = await response.text;
+            const result= await signIn("credentials",{
+                email:values.email,
+                password:values.password,
+                redirect:false
+              })
+              if(result?.ok){
+                router.push("/patrimoine/create")
+              }
+
             console.log('Login successful:', data);
+            signIn("credentials",)
+
+            
             // Handle successful login (e.g., redirect, show success message)
         } catch (error) {
             console.error('Error submitting form:', error);
