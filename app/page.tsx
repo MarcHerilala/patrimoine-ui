@@ -1,6 +1,6 @@
 
 "use client"
-import z from "zod";
+import z, { set } from "zod";
 import { ErrorOption, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -40,11 +40,13 @@ export default function Login() {
         },
     });
     const [error,setError]=useState("")
+    const [isLoading,setIsLoading]=useState(false)
 
     const router=useRouter()
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
         setError("")
+        setIsLoading(true)
 
       const result= await signIn("credentials",{
         email:values.email,
@@ -53,10 +55,12 @@ export default function Login() {
       })
       if (result?.error) {
         setError("Email ou mot de passe incorrect")
+        setIsLoading(false)
     
     }
      else {
         router.push("/dashboard")
+        setIsLoading(false)
      }
 
     
@@ -106,7 +110,7 @@ export default function Login() {
                                 )}
                             />
                             <Button className="w-full bg-[#0E0F2F]" type="submit">
-                                envoyer
+                                {isLoading?<p className="animate-spin rounded-full h-7 w-6 border-t-4 border-b-2 border-white"></p>:"connexion"}
                             </Button>
                         </form>
                     </Form>

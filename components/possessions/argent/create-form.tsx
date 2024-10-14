@@ -38,6 +38,7 @@ const formSchema = z.object({
 
 
 export default function CreateMoneyForm() {
+    const [isLoading,setIsLoading]=useState(false)
 
     const {data:session}=useSession()
     const router=useRouter()
@@ -57,6 +58,7 @@ export default function CreateMoneyForm() {
         
         try {
             // Example: Sending data to an API endpoint
+            setIsLoading(true)
             const dataToSend=[values]
             const response = await fetch(`${url}/patrimoines/patrimoine/possessions/argent?email=${session?.user?.email}`, {
                 method: 'PUT',
@@ -74,6 +76,7 @@ export default function CreateMoneyForm() {
     
             const data = await response.json();
             router.push(`/dashboard/possessions`);
+            setIsLoading(false)
             console.log('Login successful:', data);
             // Handle successful login (e.g., redirect, show success message)
         } catch (error) {
@@ -159,8 +162,8 @@ export default function CreateMoneyForm() {
                                 )}
                             />
                              
-                            <Button className="w-full bg-[#161747]" type="submit">
-                                Submit
+                             <Button className="w-full bg-[#0E0F2F]" type="submit">
+                                {isLoading?<p className="animate-spin rounded-full h-7 w-6 border-t-4 border-b-2 border-white"></p>:"connexion"}
                             </Button>
                         </form>
                     </Form>

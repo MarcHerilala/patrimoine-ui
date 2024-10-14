@@ -19,6 +19,7 @@ import { Input } from "@/components/ui/input";
 import { url } from "@/lib/api-url";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 const formSchema = z.object({
     nom: z.string(),
@@ -27,6 +28,7 @@ const formSchema = z.object({
 
 export default function CreatePatrimony() {
     const {data:session}=useSession()
+    const [isLoading,setIsLoading]=useState(false)
 
     const router=useRouter()
 
@@ -42,6 +44,7 @@ export default function CreatePatrimony() {
         
         try {
             // Example: Sending data to an API endpoint
+            setIsLoading(true)
             const response = await fetch(`${url}/patrimoines?email=${session?.user?.email}`, {
                 method: 'PUT',
                 headers: {
@@ -58,6 +61,7 @@ export default function CreatePatrimony() {
             const data = await response.json();
             router.push(`/patrimoine/create/possession`);
             console.log('Login successful:', data);
+            setIsLoading(false)
             // Handle successful login (e.g., redirect, show success message)
             
         } catch (error) {
@@ -110,8 +114,8 @@ export default function CreatePatrimony() {
                                     </FormItem>
                                 )}
                             />
-                            <Button className="w-full bg-[#161747]" type="submit">
-                                Submit
+                            <Button className="w-full bg-[#0E0F2F]" type="submit">
+                                {isLoading?<p className="animate-spin rounded-full h-7 w-6 border-t-4 border-b-2 border-white"></p>:"connexion"}
                             </Button>
                         </form>
                     </Form>

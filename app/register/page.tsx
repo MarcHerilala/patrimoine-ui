@@ -17,6 +17,7 @@ import { Input } from "@/components/ui/input";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { url } from "@/lib/api-url";
+import { useState } from "react";
 
 // Define your form schema with confirmation password validation
 const formSchema = z.object({
@@ -39,11 +40,13 @@ export default function Home() {
             confirmPassword: "",
         },
     });
+    const [isLoading,setIsLoading]=useState(false)
 
     const router = useRouter();
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
         try {
+            setIsLoading(true)
             const dataToSend = {
                 name: values.name,
                 email: values.email,
@@ -60,6 +63,7 @@ export default function Home() {
 
             if (!response.ok) {
                 throw new Error('Network response was not ok');
+
             }
 
             const result = await signIn("credentials", {
@@ -73,6 +77,7 @@ export default function Home() {
                 // Afficher un message d'erreur à l'utilisateur
             } else {
                 router.push("/patrimoine/create"); // Redirection vers l'URL souhaitée
+                setIsLoading(false)
             }
 
         } catch (error) {
@@ -145,8 +150,8 @@ export default function Home() {
                                     </FormItem>
                                 )}
                             />
-                            <Button className="w-full bg-[#161747]" type="submit">
-                                Submit
+                              <Button className="w-full bg-[#0E0F2F]" type="submit">
+                                {isLoading?<p className="animate-spin rounded-full h-7 w-6 border-t-4 border-b-2 border-white"></p>:"connexion"}
                             </Button>
                         </form>
                     </Form>

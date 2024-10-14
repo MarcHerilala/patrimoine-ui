@@ -22,6 +22,7 @@ import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { url } from "@/lib/api-url";
 import { useSession } from "next-auth/react";
+import { useState } from "react";
 
 
 
@@ -35,6 +36,7 @@ const formSchema = z.object({
 });
 
 export default function CreateMaterialForm() {
+    const [isLoading,setIsLoading]=useState(false)
 
     const {data:session}=useSession()
 
@@ -55,6 +57,7 @@ export default function CreateMaterialForm() {
     async function onSubmit(values: z.infer<typeof formSchema>) {
         
         try {
+            setIsLoading(true)
 
             const valuesToSubmit=[values]
             // Example: Sending data to an API endpoint
@@ -72,6 +75,7 @@ export default function CreateMaterialForm() {
                 throw new Error('Network response was not ok');
             }
             router.push(`/dashboard/possessions`);
+            setIsLoading(false)
 
             const data = await response.json();
             console.log('Login successful:', data);
@@ -169,8 +173,8 @@ export default function CreateMaterialForm() {
                                 )}
                             />
                              
-                            <Button className="w-full bg-[#161747]" type="submit">
-                                Submit
+                             <Button className="w-full bg-[#0E0F2F]" type="submit">
+                                {isLoading?<p className="animate-spin rounded-full h-7 w-6 border-t-4 border-b-2 border-white"></p>:"connexion"}
                             </Button>
                         </form>
                     </Form>
