@@ -26,28 +26,29 @@ const Page: React.FC = () => {
 
 
 
-    const getPossessions=async ()=>{
-        try{
-            const response=await fetch(`${url}/patrimoines/patrimoine/possessions?email=${session?.user?.email}`)
-            if(!response.ok){
-                throw new Error("error while fetching data")
-            }
-            const data=await response.json()
-            setPossessions(data)
-        }catch(e){
-            console.log(e);
-            
-        }
-    }
+   
     
     
 
     useEffect(()=>{
+        const getPossessions=async ()=>{
+            try{
+                const response=await fetch(`${url}/patrimoines/patrimoine/possessions?email=${session?.user?.email}`)
+                if(!response.ok){
+                    throw new Error("error while fetching data")
+                }
+                const data=await response.json()
+                setPossessions(data)
+            }catch(e){
+                console.log(e);
+                
+            }
+        }
         if(!session){
             return
         }
         getPossessions()
-    },[session,getPossessions])
+    },[session])
     return (
 <div className="bg-gray-50 h-full">
       
