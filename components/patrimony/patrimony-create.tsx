@@ -70,9 +70,10 @@ export default function CreatePatrimony() {
         <div className="container h-[calc(100vh-320px)]">
             <div className="flex h-full flex-grow items-center justify-center">
                 <div className="mx-auto w-full max-w-[375px]">
-                    <div className="my-8">
-                        <h1 className="mb-2 text-3xl text-center">patrimoine management</h1>
-                    </div>
+                <div className="my-8 text-center">
+                    <h1 className="text-2xl font-bold text-[#161747]">Veuillez créer votre patrimoine</h1>
+                </div>
+
                     <Form {...form}>
                         <form
                             onSubmit={form.handleSubmit(onSubmit)}
@@ -109,7 +110,7 @@ export default function CreatePatrimony() {
                                     </FormItem>
                                 )}
                             />
-                            <Button className="w-full" type="submit">
+                            <Button className="w-full bg-[#161747]" type="submit">
                                 Submit
                             </Button>
                         </form>
