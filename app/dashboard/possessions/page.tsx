@@ -5,6 +5,7 @@ import { DialogBoilerplate } from "@/components/dialog";
 import CreateMoneyForm from "@/components/possessions/argent/create-form";
 import CreateMaterialForm from "@/components/possessions/material/create-form";
 import { useSession } from "next-auth/react";
+import { PossessionFormContainer } from "@/components/possessions/Create-container";
 
 
 interface Possession {
@@ -19,7 +20,6 @@ const Page: React.FC = () => {
     const [possessions, setPossessions] = useState<Possession[]>([
       
     ]);
-    const [possessionType,setPossessionType]=useState("argent")
     
     const {data:session}=useSession()
 
@@ -39,10 +39,7 @@ const Page: React.FC = () => {
             
         }
     }
-    console.log("io ny type de possession",possessionType);
-    const handleOnTypeChange=(e:ChangeEvent<HTMLSelectElement>)=>{
-        setPossessionType(e.target.value)
-    }
+    
     
 
     useEffect(()=>{
@@ -53,34 +50,11 @@ const Page: React.FC = () => {
     },[session])
     return (
 <div className="bg-gray-100">
-        {/* 
-        <button
-        onClick={addPossession}
-        className="bg-blue-500 text-white mt-4 px-4 py-2 rounded-md hover:bg-blue-600"
-        >
-        Ajouter Possession
-        </button>
-        */}
-        <DialogBoilerplate title="create new posession" key={"1"} description=""  triggerText="+ create possession">
-            <div className="flex flex-col gap-2 ml-8 w-[314px]">
-                <label htmlFor="">type</label>
-                <select  className="bg-transparent border outline-none rounded-sm h-10"
-                onChange={handleOnTypeChange}
-                >
-                    <option value="argent">argent</option>
-                    <option value="materiel">materiel</option>
-                </select>
-            </div>
-            {
-                    possessionType === "argent" ? (
-                        <CreateMoneyForm />
-                    ) : possessionType === "materiel" ? (
-                        <CreateMaterialForm />
-                    ) : null
-}
-        </DialogBoilerplate>
+      
         <div className="mt-6 mx-4 h-full">
-           
+            <DialogBoilerplate title="create new posession" key={"1"} description=""  triggerText="+ create possession">
+                <PossessionFormContainer/>
+            </DialogBoilerplate >
             <div className="w-full space-y-4">
                 {possessions.map((possession, index) => (
                     <div key={index} className="w-full bg-white shadow-lg rounded-lg overflow-hidden p-6">
@@ -94,23 +68,7 @@ const Page: React.FC = () => {
                         <p className="text-gray-700 mt-2">
                             <span className="font-semibold">devise:</span> {possession.devise}
                         </p>
-                        {
-                            /*
-                            <div className="mt-4">
-                            <label className="block text-gray-700">Sélectionnez une date future:</label>
-                            <input
-                                type="date"
-                                value={selectedDates[index]}
-                                onChange={(e) => {
-                                    const newDates = [...selectedDates];
-                                    newDates[index] = e.target.value;
-                                    setSelectedDates(newDates);
-                                }}
-                                className="border border-gray-300 rounded-md p-2 mt-2"
-                            />
-                        </div>
-                            */
-                        }
+                       
                     </div>
                 ))}
             </div>

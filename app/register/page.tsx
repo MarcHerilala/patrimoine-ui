@@ -13,7 +13,7 @@ import {
     FormLabel,
     FormMessage,
 } from "@/components/ui/form";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 
 import { Input } from "@/components/ui/input";
 
@@ -60,18 +60,20 @@ export default function Home() {
             }
     
 
-            const data = await response.text;
             const result= await signIn("credentials",{
                 email:values.email,
                 password:values.password,
                 redirect:false
-              })
-              if(result?.ok){
-                router.push("/patrimoine/create")
-              }
+            })
+              
 
-            console.log('Login successful:', data);
-            signIn("credentials",)
+            if (result?.error) {
+                console.error("Erreur de connexion:", result.error);
+                // Afficher un message d'erreur à l'utilisateur
+              } else {
+                router.push("/patrimoine/create"); // Redirection vers l'URL souhaitée
+              }
+              
 
             
             // Handle successful login (e.g., redirect, show success message)

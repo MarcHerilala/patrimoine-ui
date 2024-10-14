@@ -38,6 +38,8 @@ export default function CreateMaterialForm() {
 
     const {data:session}=useSession()
 
+    const router=useRouter()
+
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -69,7 +71,8 @@ export default function CreateMaterialForm() {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
-    
+            router.push(`/dashboard/possessions`);
+
             const data = await response.json();
             console.log('Login successful:', data);
             // Handle successful login (e.g., redirect, show success message)

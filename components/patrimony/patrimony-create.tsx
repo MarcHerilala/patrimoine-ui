@@ -18,6 +18,7 @@ import { Input } from "@/components/ui/input";
 
 import { url } from "@/lib/api-url";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
     nom: z.string(),
@@ -26,6 +27,8 @@ const formSchema = z.object({
 
 export default function CreatePatrimony() {
     const {data:session}=useSession()
+
+    const router=useRouter()
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -50,8 +53,10 @@ export default function CreatePatrimony() {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
+
     
             const data = await response.json();
+            router.push(`/patrimoine/create/possession`);
             console.log('Login successful:', data);
             // Handle successful login (e.g., redirect, show success message)
             
