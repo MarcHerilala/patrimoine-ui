@@ -2,7 +2,7 @@
 import Image from "next/image";
 import * as React from "react";
 import PatrimonyDetails from "@/components/patrimony/patrimony-details";
-import PatrimonyEvolutoin from "@/components/patrimony/patrimony-evolution";
+import PatrimonyEvolution from "@/components/patrimony/patrimony-evolution";
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { url } from "@/lib/api-url";
@@ -15,7 +15,7 @@ const DashboardPage = () => {
       <PatrimonyDetails/>
 
       {/* Section for Patrimony Evolution */}
-      <PatrimonyEvolutoin />
+      <PatrimonyEvolution />
     </div>
   );
 };

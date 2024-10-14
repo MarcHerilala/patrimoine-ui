@@ -63,7 +63,7 @@ const PatrimonyDetails=()=>{
           <input type="date"  className="bg-transparent" onChange={handleDateChange}/>
         </div>
         <div className="bg-white shadow-md rounded-lg p-6">
-          <h1 className="text-2xl font-semibold mb-4 text-gray-800">Détails du Patrimoine</h1>
+          <h1 className="text-2xl font-semibold mb-4 text-[#161747]">Détails du Patrimoine</h1>
           <div className="border border-gray-300 rounded-md overflow-hidden">
             <table className="table-auto w-full">
               <thead>

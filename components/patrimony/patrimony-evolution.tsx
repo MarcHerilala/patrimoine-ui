@@ -3,7 +3,7 @@ import React, { useState } from "react"
 
 import { useSession } from "next-auth/react";
 
-const PatrimonyEvolutoin=()=>{
+const PatrimonyEvolution=()=>{
   const [dateInterval, setDateInterval] = useState({
     begin: "", // Date de début vide au départ
     end: "",   // Date de fin vide au départ
@@ -29,7 +29,7 @@ const PatrimonyEvolutoin=()=>{
         
     return(
         <div className="bg-white shadow-md rounded-lg p-6">
-        <h1 className="text-2xl font-semibold mb-4 text-gray-800">Évolution du Patrimoine</h1>
+        <h1 className="text-2xl font-semibold mb-4 text-[#0E0F2F]">Évolution du Patrimoine</h1>
         <div className="grid grid-cols-2 gap-6">
           <div className="border border-gray-300 rounded-lg p-4">
             <label className="text-gray-600 mb-2 block">Date de début</label>
@@ -58,4 +58,4 @@ const PatrimonyEvolutoin=()=>{
 
 }
 
-export default PatrimonyEvolutoin
+export default PatrimonyEvolution

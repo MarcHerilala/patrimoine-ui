@@ -1,29 +1,14 @@
 "use client"
 import * as React from "react";
-import { ModeToggle } from "./modeToggle";
-import { Input } from "../ui/input";
-import Image from "next/image";
-import Link from "next/link";
-import User, { UserRound } from "lucide-react"
 import { useSession } from "next-auth/react";
-
-const links = [
-    {
-        id: 1,
-        title: "Home",
-        url: "/",
-    },
-
-    {
-        id: 2,
-        title: "Contact",
-        url: "/contact",
-    },
-];
+import { usePathname } from "next/navigation"; // Import pour accéder au chemin d'URL
+import User, { UserRound } from "lucide-react";
+import { BanknoteIcon } from "lucide-react";
 
 const Navbar = () => {
-    const {data:session,status}=useSession()
-    
+    const { data: session } = useSession();
+    const pathname = usePathname(); // Récupère l'URL actuelle
+
     return (
         <nav className="ease-in-outs custom-filter sticky top-0 z-30 w-full border-b border-accent py-3 transition duration-300 md:bg-background/90">
             <div className="container mx-auto px-6">
@@ -38,12 +23,15 @@ const Navbar = () => {
                         </div>
 
                         <div className="flex items-center gap-8">
-                            <div className="flex items-center space-x-2 flxco">
-                                <div>
-                                     <UserRound/>
+                            {/* Afficher les informations utilisateur uniquement si le chemin contient '/dashboard' */}
+                            {pathname.includes("/dashboard") && (
+                                <div className="flex items-center space-x-2 flxco">
+                                    <div>
+                                        <UserRound />
+                                    </div>
+                                    <div>{session?.user?.email}</div>
                                 </div>
-                                <div>{session?.user?.email}</div>
-                            </div>
+                            )}
                         </div>
                     </div>
                 </div>

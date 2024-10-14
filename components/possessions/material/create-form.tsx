@@ -169,7 +169,7 @@ export default function CreateMaterialForm() {
                                 )}
                             />
                              
-                            <Button className="w-full" type="submit">
+                            <Button className="w-full bg-[#161747]" type="submit">
                                 Submit
                             </Button>
                         </form>

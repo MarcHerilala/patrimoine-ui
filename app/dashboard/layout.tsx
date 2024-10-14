@@ -7,8 +7,10 @@ import {
     LogOut,
     MessagesSquare,
     Plus,
+    Landmark,
+    Building
 } from "lucide-react";
-
+import {  } from "lucide-react";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
@@ -31,23 +33,19 @@ export default function ProductDetailLayout({
                 <div className="fixed bottom-0 z-20 flex w-full cursor-pointer flex-col gap-4 px-4 sm:hidden">
                     <MobileNavigation />
                 </div>
-                <div className="fixed hidden h-auto w-48 flex-col  border-r bg-neutral-50 bg-opacity-100 dark:bg-neutral-950 md:flex">
-                    <div className="my-10 flex flex-col font-bold text-neutral-700">
+                <div className="fixed hidden h-auto w-48 flex-col  border-r bg-white bg-opacity-100 dark:bg-neutral-950 md:flex">
+                    <div className="my-10 flex flex-col gap-4 font-bold text-[#161747]">
                         <NavItem
                             link={"/dashboard"}
                             label={"Patrimoine"}
-                            Icon={<Briefcase size={20} />}
+                            Icon={<Landmark size={20} />}
                         />
                         <NavItem
                             link={"/dashboard/possessions"}
                             label={"Possessions"}
-                            Icon={<BookText size={20} />}
+                            Icon={<Building size={20} />}
                         />
-                        <NavItem
-                            link={"/dashboard/forums"}
-                            label={"Forums"}
-                            Icon={<MessagesSquare size={20} />}
-                        />
+                     
                     </div>
                     <div className="mt-[280px] border-y" onClick={handleSignOut}>
                         <div className="flex cursor-pointer items-center gap-4 border-l-4 border-transparent p-4 text-sm hover:border-neutral-800 hover:bg-white">
@@ -58,6 +56,7 @@ export default function ProductDetailLayout({
                 </div>
 
                 <div className="relative grow md:ml-48" id="content">
+
                    
                     {children}
                 </div>
@@ -84,9 +83,9 @@ function NavItem({ label, Icon, link }: INavItem) {
     return (
         <Link
             href={link}
-            className={`flex cursor-pointer items-center gap-4 border-l-4 p-4 text-sm  hover:border-neutral-800 hover:bg-white dark:text-neutral-200 dark:hover:text-neutral-900 ${
+            className={`flex cursor-pointer items-center gap-4 border-l-4 p-4 text-sm  hover:border-white hover:bg-[#161747] dark:text-neutral-200 hover:text-white dark:hover:text-neutral-900 rounded-lg  ${
                 isVisited
-                    ? "border-neutral-800 bg-white dark:text-neutral-900"
+                    ? "border-white bg-[#161747] dark:text-neutral-900 text-white"
                     : "border-transparent"
             }`}
         >
@@ -134,11 +133,7 @@ const MobileNavigation = () => {
                         label={"Blogs"}
                         Icon={<BookText size={20} />}
                     />
-                    <NavItem
-                        link={"/dashboard/forums"}
-                        label={"Forums"}
-                        Icon={<MessagesSquare size={20} />}
-                    />
+                 
                 </div>
                 <div className="mt-auto border-y">
                     <div className="flex cursor-pointer items-center gap-4 border-l-4 border-transparent p-4 text-sm hover:border-neutral-800 hover:bg-white">

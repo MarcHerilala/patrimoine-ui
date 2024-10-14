@@ -49,13 +49,13 @@ const Page: React.FC = () => {
         getPossessions()
     },[session])
     return (
-<div className="bg-gray-100">
+<div className="bg-gray-50 h-full">
       
-        <div className="mt-6 mx-4 h-full">
+        <div className="mx-4">
             <DialogBoilerplate title="create new posession" key={"1"} description=""  triggerText="+ create possession">
                 <PossessionFormContainer/>
             </DialogBoilerplate >
-            <div className="w-full space-y-4">
+            <div className="w-full space-y-4 mt-10">
                 {possessions.map((possession, index) => (
                     <div key={index} className="w-full bg-white shadow-lg rounded-lg overflow-hidden p-6">
                         <h2 className="text-xl font-bold text-gray-800">{possession.nom}</h2>

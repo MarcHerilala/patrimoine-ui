@@ -99,7 +99,7 @@ export default function Login() {
                                     </FormItem>
                                 )}
                             />
-                            <Button className="w-full" type="submit">
+                            <Button className="w-full bg-[#0E0F2F]" type="submit">
                                 Submit
                             </Button>
                         </form>
