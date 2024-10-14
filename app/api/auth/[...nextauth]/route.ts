@@ -57,11 +57,7 @@ const authOptions: NextAuthOptions = {
     secret: "this is the secret key of the auth",
   },
 
-  pages: {
-    signIn: "/auth/login",
-    signOut: "/auth/logout",
-    error: "/auth/error",
-  },
+
 
   callbacks: {
     async jwt({ token, user }) {
