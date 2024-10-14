@@ -22,6 +22,7 @@ import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { url } from "@/lib/api-url";
 import { useAuthStore } from "@/store/auth-store";
+import { useState } from "react";
 
 const formSchema = z.object({
     email: z.string(),
@@ -38,19 +39,24 @@ export default function Login() {
             password: "",
         },
     });
+    const [error,setError]=useState("")
+
+    const router=useRouter()
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
+        setError("")
+
       const result= await signIn("credentials",{
         email:values.email,
         password:values.password,
         redirect:false
       })
       if (result?.error) {
-        alert(result.error)
+        setError("Email ou mot de passe incorrect")
     
     }
      else {
-        alert("you are authenticated")
+        router.push("/dashboard")
      }
 
     
@@ -61,7 +67,7 @@ export default function Login() {
             <div className="flex h-full flex-grow items-center justify-center">
                 <div className="mx-auto w-full max-w-[375px]">
                     <div className="my-8">
-                        <h1 className="mb-2 text-3xl text-center">patrimoine management</h1>
+                        <h1 className="mb-2 text-3xl text-center text-[#161747] font-bold">connextion</h1>
                     </div>
                     <Form {...form}>
                         <form
@@ -91,7 +97,7 @@ export default function Login() {
                                 name="password"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Password</FormLabel>
+                                        <FormLabel>Mot de passe</FormLabel>
                                         <FormControl>
                                             <Input type="password" {...field} />
                                         </FormControl>
@@ -100,10 +106,12 @@ export default function Login() {
                                 )}
                             />
                             <Button className="w-full bg-[#0E0F2F]" type="submit">
-                                Submit
+                                envoyer
                             </Button>
                         </form>
                     </Form>
+                    <p className="text-center mt-5 text-red-500">{error}</p>
+                    <p className="text-center mt-5">vous n &apos; avez pas de compte?<Link href={"/register"} className="font-extrabold text-[#161747]">creer un compte</Link></p>
                 </div>
             </div>
         </div>

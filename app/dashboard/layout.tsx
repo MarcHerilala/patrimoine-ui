@@ -12,9 +12,10 @@ import {
 } from "lucide-react";
 import {  } from "lucide-react";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import { signOut } from "next-auth/react";
+import { useSession } from "next-auth/react";
 
 export default function ProductDetailLayout({
     children,
@@ -27,6 +28,20 @@ export default function ProductDetailLayout({
             callbackUrl:"/"
         })
     }
+
+    const { data: session,status } = useSession();
+    const router = useRouter();
+
+    useEffect(() => {
+        // Vérifiez si le statut est "loading"
+        if (status === "loading") return; // Ne rien faire pendant le chargement
+
+        // Vérifiez si l'utilisateur n'est pas authentifié
+        if (status === "unauthenticated") {
+            router.push("/"); // Redirige vers la page d'accueil ou de connexion
+        }
+    }, [status, router]);
+
     return (
         <>
             <div className="relative flex h-full min-h-screen">

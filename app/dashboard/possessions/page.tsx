@@ -47,7 +47,7 @@ const Page: React.FC = () => {
             return
         }
         getPossessions()
-    },[session])
+    },[session,getPossessions])
     return (
 <div className="bg-gray-50 h-full">
       
