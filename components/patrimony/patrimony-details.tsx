@@ -49,10 +49,7 @@ const PatrimonyDetails=()=>{
     fetchData();
   }, [session,date]); // Dépend de session et de url
 
-  // Affiche un message de chargement ou d'erreur
-  if (status === "loading") {
-    return <div>Loading...</div>;
-  }
+  
 
   if (error) {
     return <div>{error}</div>;
@@ -60,7 +57,7 @@ const PatrimonyDetails=()=>{
     return (
     <div>
         <div className="flex flex-col gap-1 w-40 bg-white border rounded-sm p-2 mb-10">
-          <input type="date"  className="bg-transparent" onChange={handleDateChange}/>
+          <input type="date"  className="bg-transparent" onChange={handleDateChange} value={date}/>
         </div>
         <div className="bg-white shadow-md rounded-lg p-6">
           <h1 className="text-2xl font-semibold mb-4 text-[#161747]">Détails du Patrimoine</h1>

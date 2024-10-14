@@ -2,8 +2,7 @@
 import * as React from "react";
 import { useSession } from "next-auth/react";
 import { usePathname } from "next/navigation"; // Import pour accéder au chemin d'URL
-import User, { UserRound } from "lucide-react";
-import { BanknoteIcon } from "lucide-react";
+import User, { UserRound ,Landmark } from "lucide-react";
 
 const Navbar = () => {
     const { data: session } = useSession();
@@ -16,16 +15,17 @@ const Navbar = () => {
                     <div className="flex w-full items-center justify-between gap-5">
                         <div className="flex items-center gap-4">
                             <div className="w-10">
-                                <p className="title hidden text-xl font-bold md:block">
-                                    logo
-                                </p>
+                            <p className="title hidden text-3xl font-extrabold md:block text-[#161747] tracking-wider shadow-lg bg-transparent">
+                                patrimoine
+                            </p>
+
                             </div>
                         </div>
 
                         <div className="flex items-center gap-8">
                             {/* Afficher les informations utilisateur uniquement si le chemin contient '/dashboard' */}
                             {pathname.includes("/dashboard") && (
-                                <div className="flex items-center space-x-2 flxco">
+                                <div className="flex items-center space-x-2 flxco text-[#161747]">
                                     <div>
                                         <UserRound />
                                     </div>
