@@ -53,9 +53,12 @@ const Page: React.FC = () => {
 <div className="bg-gray-50 h-full">
       
         <div className="mx-4">
-            <DialogBoilerplate title="create new posession" key={"1"} description=""  triggerText="+ create possession">
-                <PossessionFormContainer/>
-            </DialogBoilerplate >
+            <div className="flex justify-between items-center">
+                <div className="font-bold text-[#0E0F2F] text-2xl mt-6">Liste des possessions</div>
+                <DialogBoilerplate title="create new posession" key={"1"} description=""  triggerText="+ créer possession">
+                    <PossessionFormContainer/>
+                </DialogBoilerplate >
+            </div>
             <div className="w-full space-y-4 mt-10">
                 {possessions.map((possession, index) => (
                     <div key={index} className="w-full bg-white shadow-lg rounded-lg overflow-hidden p-6">
@@ -66,9 +69,13 @@ const Page: React.FC = () => {
                         <p className="text-gray-700 mt-2">
                             <span className="font-semibold">Date dAcquisition:</span> {possession.t}
                         </p>
-                        <p className="text-gray-700 mt-2">
+                        {
+                            /*
+                            <p className="text-gray-700 mt-2">
                             <span className="font-semibold">devise:</span> {possession.devise}
                         </p>
+                            */
+                        }
                        
                     </div>
                 ))}
