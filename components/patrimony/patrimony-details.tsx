@@ -11,6 +11,9 @@ import { url } from "@/lib/api-url";
 const PatrimonyDetails=()=>{
 
   const { data: session, status } = useSession();
+
+  const [loading, setLoading] = useState(false);
+
   const [patrimony, setPatrimony] = useState({
     nom: "",
     t: "",
@@ -32,6 +35,8 @@ const PatrimonyDetails=()=>{
      
 
       try {
+        setLoading(true);
+        
         const response = await fetch(`${url}/patrimoines/patrimoine?email=${session?.user?.email}&date=${date}`, { cache: 'no-store' });
         console.log("you can se below the session user",session?.user?.email) ;
         
@@ -39,6 +44,7 @@ const PatrimonyDetails=()=>{
           throw new Error("Failed to fetch data");
         }
         const data = await response.json();
+        setLoading(false);
         setPatrimony(data); // Stocke les données dans l'état local
       } catch (error) {
         console.error("Error fetching patrimony:", error);
@@ -49,11 +55,29 @@ const PatrimonyDetails=()=>{
     fetchData();
   }, [session,date]); // Dépend de session et de url
 
-  
+  const renderSkeleton = () => (
+   <table className="table-auto w-full h-full">
+       <tbody className="">
+      {[...Array(3)].map((_, index) => (
+        <tr key={index}>
+          <td className="border px-4 py-2 bg-gray-200 animate-pulse">
+            <div className="h-4 bg-gray-300 rounded w-24"></div>
+          </td>
+          <td className="border px-4 py-2 bg-gray-200 animate-pulse">
+            <div className="h-4 bg-gray-300 rounded w-full"></div>
+          </td>
+        </tr>
+      ))}
+    </tbody>
+   </table>
+  );
 
   if (error) {
     return <div>{error}</div>;
   }
+
+
+  
     return (
     <div>
         <div className="flex flex-col gap-1 w-40 bg-white border rounded-sm p-2 mb-10">
@@ -61,8 +85,15 @@ const PatrimonyDetails=()=>{
         </div>
         <div className="bg-white shadow-md rounded-lg p-6">
           <h1 className="text-2xl font-semibold mb-4 text-[#161747]">Détails du Patrimoine</h1>
-          <div className="border border-gray-300 rounded-md overflow-hidden">
-            <table className="table-auto w-full">
+          <div className="border border-gray-300 rounded-md overflow-hidden h-[200px]">
+            {
+              loading &&(
+                renderSkeleton()
+              )
+            }
+            {
+              !loading &&(
+                <table className="table-auto w-full">
               <thead>
                 <tr className="bg-transparent text-left">
                   <th className="px-4 py-2 text-gray-800">Propriété</th>
@@ -84,6 +115,8 @@ const PatrimonyDetails=()=>{
                 </tr>
               </tbody>
             </table>
+              )
+            }
           </div>
       </div>
     </div>
