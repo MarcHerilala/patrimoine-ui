@@ -2,10 +2,9 @@
 import { url } from "@/lib/api-url";
 import React, { ChangeEvent, useEffect, useState } from "react";
 import { DialogBoilerplate } from "@/components/dialog";
-import CreateMoneyForm from "@/components/possessions/argent/create-form";
-import CreateMaterialForm from "@/components/possessions/material/create-form";
 import { useSession } from "next-auth/react";
 import { PossessionFormContainer } from "@/components/possessions/Create-container";
+import { Trash2 } from "lucide-react";
 
 
 interface Possession {
@@ -61,23 +60,7 @@ const Page: React.FC = () => {
             </div>
             <div className="w-full space-y-4 mt-10">
                 {possessions.map((possession, index) => (
-                    <div key={index} className="w-full bg-white shadow-lg rounded-lg overflow-hidden p-6">
-                        <h2 className="text-xl font-bold text-gray-800">{possession.nom}</h2>
-                        <p className="text-gray-700 mt-2">
-                            <span className="font-semibold">Valeur Comptable:</span> {possession.valeurComptable.toLocaleString()} 
-                        </p>
-                        <p className="text-gray-700 mt-2">
-                            <span className="font-semibold">Date dAcquisition:</span> {possession.t}
-                        </p>
-                        {
-                            /*
-                            <p className="text-gray-700 mt-2">
-                            <span className="font-semibold">devise:</span> {possession.devise}
-                        </p>
-                            */
-                        }
-                       
-                    </div>
+                    <PossessionItem possession={possession} key={index} />
                 ))}
             </div>
 
@@ -86,5 +69,40 @@ const Page: React.FC = () => {
     </div>
     );
 };
+
+const PossessionItem: React.FC<{ possession: Possession }> = ({ possession }) => {
+    const {data:session}=useSession()
+
+    const deletePossession = async () => {
+        try {
+            const response = await fetch(`${url}/patrimoines/possessions/${possession.nom}?email=${session?.user?.email}`, {
+                method: 'DELETE',
+            });
+            if (!response.ok) {
+                throw new Error("Failed to delete possession");
+            }
+           
+        } catch (error) {
+            console.error("Error deleting possession:", error);
+        }
+    }
+    return(
+        <div key={possession.nom} className="w-full bg-white shadow-lg rounded-lg overflow-hidden p-6 flex flex-row items-center justify-between">
+                <div>
+                    <h2 className="text-xl font-bold text-gray-800">{possession.nom}</h2>
+                    <p className="text-gray-700 mt-2">
+                        <span className="font-semibold">Valeur Comptable:</span> {possession.valeurComptable.toLocaleString()} 
+                    </p>
+                    <p className="text-gray-700 mt-2">
+                        <span className="font-semibold">Date dAcquisition:</span> {possession.t}
+                    </p>
+                        
+                </div>
+                <div className="">
+                    <button onClick={deletePossession} className="text-red-500"><Trash2/></button>
+                </div>
+        </div>
+    )
+}
 
 export default Page;
