@@ -65,7 +65,7 @@ export default function ProductDetailLayout({
                     <div className="mt-[300px] border-y" onClick={handleSignOut}>
                         <div className="flex cursor-pointer items-center gap-4 border-l-4 border-transparent p-4 text-sm hover:border-neutral-800 hover:bg-white">
                             <LogOut size={20} />
-                            <p>Logout</p>
+                            <p>se deconnecter</p>
                         </div>
                     </div>
                 </div>
