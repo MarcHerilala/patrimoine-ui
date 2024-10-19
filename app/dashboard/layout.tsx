@@ -8,7 +8,9 @@ import {
     MessagesSquare,
     Plus,
     Landmark,
-    Building
+    Building,
+    ArrowLeftRight
+
 } from "lucide-react";
 import {  } from "lucide-react";
 import Image from "next/image";
@@ -60,7 +62,11 @@ export default function ProductDetailLayout({
                             label={"Possessions"}
                             Icon={<Building size={20} />}
                         />
-                     
+                        <NavItem
+                        link="/dashboard/flux"
+                        label="Flux"
+                        Icon={<ArrowLeftRight size={20} />}
+                        />
                     </div>
                     <div className="mt-[300px] border-y" onClick={handleSignOut}>
                         <div className="flex cursor-pointer items-center gap-4 border-l-4 border-transparent p-4 text-sm hover:border-neutral-800 hover:bg-white">
