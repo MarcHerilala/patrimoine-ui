@@ -25,15 +25,24 @@ import { useSession } from "next-auth/react";
 import { useState } from "react";
 
 
-
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+  } from "@/components/ui/select"
 
 const formSchema = z.object({
     nom: z.string(),
     t: z.string(),
-    valeurComptable: z.string(),
     dateAcquisition:z.string(),
-    tauxDAppreciationAnnuelle:z.string()
+
+    valeurComptable: z.string().transform((val) => Number(val)),
+    tauxDAppreciationAnuelle:z.string().transform((val) => Number(val)),
+    devise:z.string()
 });
+
 
 export default function CreateMaterialForm() {
     const [isLoading,setIsLoading]=useState(false)
@@ -47,9 +56,10 @@ export default function CreateMaterialForm() {
         defaultValues: {
             nom: "",
             t: "",
-            valeurComptable: "",
             dateAcquisition:"",
-            tauxDAppreciationAnnuelle:""
+            valeurComptable: 0,
+            tauxDAppreciationAnuelle:0,
+            devise:""
          
         },
     });
@@ -59,14 +69,13 @@ export default function CreateMaterialForm() {
         try {
             setIsLoading(true)
 
-            const valuesToSubmit=[values]
             // Example: Sending data to an API endpoint
             const response = await fetch(`${url}/patrimoines/patrimoine/possessions/materiel?email=${session?.user?.email}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(valuesToSubmit),
+                body: JSON.stringify(values),
             });
     
             console.log("io ny url ",url);
@@ -146,6 +155,29 @@ export default function CreateMaterialForm() {
                                     </FormItem>
                                 )}
                             />
+                             <FormField
+                                control={form.control}
+                                name="devise"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>devise</FormLabel>
+                                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                        <FormControl>
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="devise" />
+                                        </SelectTrigger>
+                                        </FormControl>
+                                        <SelectContent>
+                                        <SelectItem value="MGA">MGA</SelectItem>
+                                        <SelectItem value="EUR">EUR</SelectItem>
+                                        <SelectItem value="CAD">CAD</SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            
                               <FormField
                                 control={form.control}
                                 name="dateAcquisition"
@@ -161,7 +193,7 @@ export default function CreateMaterialForm() {
                             />
                               <FormField
                                 control={form.control}
-                                name="tauxDAppreciationAnnuelle"
+                                name="tauxDAppreciationAnuelle"
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel>taux d appreciation annuelle</FormLabel>

@@ -13,6 +13,13 @@ import {
     FormLabel,
     FormMessage,
 } from "@/components/ui/form";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+  } from "@/components/ui/select"
 
 import { Input } from "@/components/ui/input";
 
@@ -28,13 +35,13 @@ import { useState } from "react";
 
 
 const formSchema = z.object({
-    nom: z.string().nonempty(),
-    t: z.string(),
+    nom: z.string(),
     dateOuverture: z.string(),
+    t: z.string(),
     valeurComptable: z
         .string()
-        .nonempty()
         .transform((val) => Number(val)), // Transforme la chaîne en nombre
+    devise:z.string()
 });
 
 
@@ -48,10 +55,10 @@ export default function CreateMoneyForm() {
         resolver: zodResolver(formSchema),
         defaultValues: {
             nom: "",
-            t: "",
             dateOuverture:"",
+            t: "",
             valeurComptable: 0,
-         
+            devise:""
         },
     });
 
@@ -60,13 +67,12 @@ export default function CreateMoneyForm() {
         try {
             // Example: Sending data to an API endpoint
             setIsLoading(true)
-            const dataToSend=[values]
             const response = await fetch(`${url}/patrimoines/patrimoine/possessions/argent?email=${session?.user?.email}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(dataToSend),
+                body: JSON.stringify(values),
             });
     
             console.log("io ny url ",url);
@@ -162,7 +168,28 @@ export default function CreateMoneyForm() {
                                     </FormItem>
                                 )}
                             />
-                             
+                            <FormField
+                                control={form.control}
+                                name="devise"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>devise</FormLabel>
+                                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                        <FormControl>
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="devise" />
+                                        </SelectTrigger>
+                                        </FormControl>
+                                        <SelectContent>
+                                        <SelectItem value="MGA">MGA</SelectItem>
+                                        <SelectItem value="EUR">EUR</SelectItem>
+                                        <SelectItem value="CAD">CAD</SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
                              <Button className="w-full bg-[#0E0F2F]" type="submit">
                                 {isLoading?<p className="animate-spin rounded-full h-7 w-6 border-t-4 border-b-2 border-white"></p>:"connexion"}
                             </Button>

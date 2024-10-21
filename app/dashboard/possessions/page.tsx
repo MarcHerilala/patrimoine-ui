@@ -5,13 +5,18 @@ import { DialogBoilerplate } from "@/components/dialog";
 import { useSession } from "next-auth/react";
 import { PossessionFormContainer } from "@/components/possessions/Create-container";
 import { Trash2 } from "lucide-react";
-
+interface Devise{
+    "nom": string,
+    "valeurEnAriary": number,
+    "t": string,
+    "tauxDappréciationAnnuel": number
+}
 
 interface Possession {
     nom: string;
     t:string;
     valeurComptable: number;
-    devise:string;
+    devise:Devise;
   
 }
 
@@ -94,9 +99,14 @@ const PossessionItem: React.FC<{ possession: Possession }> = ({ possession }) =>
                         <span className="font-semibold">Valeur Comptable:</span> {possession.valeurComptable.toLocaleString()} 
                     </p>
                     <p className="text-gray-700 mt-2">
+                        <span className="font-semibold">Devise:</span> {possession.devise.nom}
+                    </p>
+                    
+                    <p className="text-gray-700 mt-2">
                         <span className="font-semibold">Date dAcquisition:</span> {possession.t}
                     </p>
                         
+                    
                 </div>
                 <div className="">
                     <button onClick={deletePossession} className="text-red-500"><Trash2/></button>
