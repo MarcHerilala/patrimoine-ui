@@ -9,7 +9,9 @@ import {
     Plus,
     Landmark,
     Building,
-    ArrowLeftRight
+    ArrowLeftRight,
+    Package,
+    DollarSign
 
 } from "lucide-react";
 import {  } from "lucide-react";
@@ -58,9 +60,14 @@ export default function ProductDetailLayout({
                             Icon={<Landmark size={20} />}
                         />
                         <NavItem
-                            link={"/dashboard/possessions"}
-                            label={"Possessions"}
-                            Icon={<Building size={20} />}
+                            link={"/dashboard/biens"}
+                            label={"Biens"}
+                            Icon={<Package size={20} />}
+                        />
+                        <NavItem
+                            link={"/dashboard/tresorerie"}
+                            label={"trésoreries"}
+                            Icon={<DollarSign size={20} />}
                         />
                         <NavItem
                         link="/dashboard/flux"
@@ -68,7 +75,7 @@ export default function ProductDetailLayout({
                         Icon={<ArrowLeftRight size={20} />}
                         />
                     </div>
-                    <div className="mt-[300px] border-y" onClick={handleSignOut}>
+                    <div className="mt-[165px] border-y" onClick={handleSignOut}>
                         <div className="flex cursor-pointer items-center gap-4 border-l-4 border-transparent p-4 text-sm hover:border-neutral-800 hover:bg-white">
                             <LogOut size={20} />
                             <p>se deconnecter</p>

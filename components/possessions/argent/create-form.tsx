@@ -23,13 +23,14 @@ import {
 
 import { Input } from "@/components/ui/input";
 
-
 import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { url } from "@/lib/api-url";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
+import useArgentStore from "@/store/ArgentStore";
+
 
 
 
@@ -47,6 +48,7 @@ const formSchema = z.object({
 
 export default function CreateMoneyForm() {
     const [isLoading,setIsLoading]=useState(false)
+    const {addMonnaie,argentList}=useArgentStore()
 
     const {data:session}=useSession()
     const router=useRouter()
@@ -82,8 +84,13 @@ export default function CreateMoneyForm() {
             }
     
             const data = await response.json();
-            router.push(`/dashboard/possessions`);
+            router.push(`/dashboard/tresorerie`);
             setIsLoading(false)
+            console.log("io le data nom:",values.nom);
+            
+            addMonnaie(values.nom)
+            console.log("reo ny argent list",argentList);
+            
             console.log('Login successful:', data);
             // Handle successful login (e.g., redirect, show success message)
         } catch (error) {
@@ -107,11 +114,11 @@ export default function CreateMoneyForm() {
                                 name="nom"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>name</FormLabel>
+                                        <FormLabel>nom</FormLabel>
                                         <FormControl>
                                             <Input
                                                 type="nom"
-                                                placeholder="nom possession"
+                                                placeholder="nom "
                                                 {...field}
                                             />
                                         </FormControl>

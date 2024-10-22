@@ -110,11 +110,11 @@ export default function CreateMaterialForm() {
                                 name="nom"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>name</FormLabel>
+                                        <FormLabel>nom</FormLabel>
                                         <FormControl>
                                             <Input
-                                                type="nom"
-                                                placeholder="nom possession"
+                                                type="nom "
+                                                placeholder="nom du matériel"
                                                 {...field}
                                             />
                                         </FormControl>
@@ -206,7 +206,7 @@ export default function CreateMaterialForm() {
                             />
                              
                              <Button className="w-full bg-[#0E0F2F]" type="submit">
-                                {isLoading?<p className="animate-spin rounded-full h-7 w-6 border-t-4 border-b-2 border-white"></p>:"connexion"}
+                                {isLoading?<p className="animate-spin rounded-full h-7 w-6 border-t-4 border-b-2 border-white"></p>:"envoyer"}
                             </Button>
                         </form>
                     </Form>

@@ -32,6 +32,7 @@ import {
     SelectTrigger,
     SelectValue,
   } from "@/components/ui/select"
+  import useArgentStore from "@/store/ArgentStore";
 
 const formSchema = z.object({
     nom: z.string(),
@@ -41,12 +42,14 @@ const formSchema = z.object({
     fluxMensuel: z.string().transform((val) => Number(val)),
     dateOperation:z.string().transform((val) => Number(val)),
     devise:z.string(),
-    type:z.string()
+    type:z.string(),
+    argent:z.string()
 });
 
 
-export default function CreateMaterialForm() {
+export default function CreateFuxForm() {
     const [isLoading,setIsLoading]=useState(false)
+    const {argentList}=useArgentStore()
 
     const {data:session}=useSession()
 
@@ -61,7 +64,8 @@ export default function CreateMaterialForm() {
             fluxMensuel: 0,
             dateOperation:0,
             devise:"",
-            type:""
+            type:"",
+            argent:""
          
         },
     });
@@ -72,7 +76,7 @@ export default function CreateMaterialForm() {
             setIsLoading(true)
 
             // Récupération du type
-                const { type, ...restValues } = values; // 'restValues' contient tout sauf 'type'
+                const { type,argent, ...restValues } = values; // 'restValues' contient tout sauf 'type'
 
                 // Ajuster la valeur de fluxMensuel
                 if (type === "revenu") {
@@ -81,7 +85,7 @@ export default function CreateMaterialForm() {
                     restValues.fluxMensuel = -restValues.fluxMensuel;
                 }
                             
-            const response = await fetch(`${url}/patrimoines/patrimoine/possessions/materiel?email=${session?.user?.email}`, {
+            const response = await fetch(`${url}/patrimoines/patrimoine/possessions/fluxArgent?argent=${argent}&email=${session?.user?.email}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -94,7 +98,7 @@ export default function CreateMaterialForm() {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
-            router.push(`/dashboard/possessions`);
+            router.push(`/dashboard/flux`);
             setIsLoading(false)
 
             const data = await response.json();
@@ -125,7 +129,7 @@ export default function CreateMaterialForm() {
                                         <Select onValueChange={field.onChange} defaultValue={field.value}>
                                         <FormControl>
                                         <SelectTrigger>
-                                            <SelectValue placeholder="devise" />
+                                            <SelectValue placeholder="type" />
                                         </SelectTrigger>
                                         </FormControl>
                                         <SelectContent>
@@ -142,11 +146,11 @@ export default function CreateMaterialForm() {
                                 name="nom"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>name</FormLabel>
+                                        <FormLabel>titre</FormLabel>
                                         <FormControl>
                                             <Input
                                                 type="nom"
-                                                placeholder="nom possession"
+                                                placeholder="titre "
                                                 {...field}
                                             />
                                         </FormControl>
@@ -155,6 +159,7 @@ export default function CreateMaterialForm() {
                                 )}
                             />
 
+                            <div className="flex flex-row gap-1">
                             <FormField
                                 control={form.control}
                                 name="debut"
@@ -187,6 +192,7 @@ export default function CreateMaterialForm() {
                                     </FormItem>
                                 )}
                             />
+                            </div>
                              <FormField
                                 control={form.control}
                                 name="devise"
@@ -232,6 +238,32 @@ export default function CreateMaterialForm() {
                                         <FormControl>
                                             <Input type="number" {...field} />
                                         </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                       
+                            <FormField
+                                control={form.control}
+                                name="argent"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>argent</FormLabel>
+                                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                        <FormControl>
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="type" />
+                                        </SelectTrigger>
+                                        </FormControl>
+                                        <SelectContent>
+                                            {
+                                                argentList.map((argent)=>(
+                                                    <SelectItem key={argent} value={argent}>{argent}</SelectItem>
+                                                ))
+                                            }
+                                    
+                                        </SelectContent>
+                                    </Select>
                                         <FormMessage />
                                     </FormItem>
                                 )}
