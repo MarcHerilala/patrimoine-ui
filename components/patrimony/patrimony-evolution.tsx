@@ -57,7 +57,7 @@ const PatrimonyEvolution = () => {
   return (
     <div className="bg-white shadow-md rounded-lg p-6">
       <h1 className="text-2xl font-semibold mb-4 text-[#0E0F2F]">Évolution du Patrimoine</h1>
-      <div className="grid grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="border border-gray-300 rounded-lg p-4">
           <label className="text-gray-600 mb-2 block">Date de début</label>
           <input
@@ -88,7 +88,7 @@ const PatrimonyEvolution = () => {
         {!loading && image && (
           <Image
             src={image}
-            className="w-full h-[700px] rounded-md shadow-lg"
+            className="w-full h-[300px] md:h-[700px] rounded-md shadow-lg"
             width={800}
             height={100}
             alt="Patrimony graph"

@@ -84,7 +84,7 @@ export default function CreateMoneyForm() {
             }
     
             const data = await response.json();
-            router.push(`/dashboard/tresorerie`);
+            window.location.href=`/dashboard/tresorerie`;
             setIsLoading(false)
             console.log("io le data nom:",values.nom);
             

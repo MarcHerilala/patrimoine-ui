@@ -43,7 +43,7 @@ getFLuxList()
             </DialogBoilerplate>
         </div>
 
-        <div className="grid grid-cols-3 gap-6 pt-10">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-10">
             {fluxData&&fluxData.map((flux, index) => (
                 <FluxCard key={index} flux={flux} />
             ))}

@@ -151,16 +151,26 @@ const MobileNavigation = () => {
                 onClick={(event) => menuCloseClickHandler()}
             >
                 <div className="my-10 flex flex-col font-bold text-neutral-700">
-                    <NavItem
-                        link={"/dashboard"}
-                        label={"Patrimoine"}
-                        Icon={<Briefcase size={20} />}
-                    />
-                    <NavItem
-                        link={"/dashboard/possessions"}
-                        label={"Possessions"}
-                        Icon={<BookText size={20} />}
-                    />
+                <NavItem
+                            link={"/dashboard"}
+                            label={"Patrimoine"}
+                            Icon={<Landmark size={20} />}
+                        />
+                        <NavItem
+                            link={"/dashboard/biens"}
+                            label={"Biens"}
+                            Icon={<Package size={20} />}
+                        />
+                        <NavItem
+                            link={"/dashboard/tresorerie"}
+                            label={"trésoreries"}
+                            Icon={<DollarSign size={20} />}
+                        />
+                        <NavItem
+                        link="/dashboard/flux"
+                        label="Flux"
+                        Icon={<ArrowLeftRight size={20} />}
+                        />
                  
                 </div>
                 <div className="mt-auto border-y">

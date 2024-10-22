@@ -98,7 +98,7 @@ export default function CreateFuxForm() {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
-            router.push(`/dashboard/flux`);
+            window.location.href=`/dashboard/flux`;
             setIsLoading(false)
 
             const data = await response.json();

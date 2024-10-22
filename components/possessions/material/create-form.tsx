@@ -83,7 +83,7 @@ export default function CreateMaterialForm() {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
-            router.push(`/dashboard/possessions`);
+            window.location.href=`/dashboard/biens`;
             setIsLoading(false)
 
             const data = await response.json();
