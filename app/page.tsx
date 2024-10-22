@@ -21,7 +21,6 @@ import { redirect, useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { url } from "@/lib/api-url";
-import { useAuthStore } from "@/store/auth-store";
 import { useState } from "react";
 
 const formSchema = z.object({
