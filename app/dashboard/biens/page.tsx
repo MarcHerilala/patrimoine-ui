@@ -6,6 +6,10 @@ import { useSession } from "next-auth/react";
 import { PossessionFormContainer } from "@/components/possessions/Create-container";
 import { Trash2 } from "lucide-react";
 import CreateMaterialForm from "@/components/possessions/material/create-form";
+import { Button } from "@/components/ui/button";
+import { DialogHeader } from "@/components/ui/dialog";
+import { Dialog, DialogTrigger, DialogContent, DialogTitle ,DialogClose} from "@/components/ui/dialog"
+import { title } from "process";
 interface Devise{
     "nom": string,
     "valeurEnAriary": number,
@@ -27,6 +31,7 @@ const Page: React.FC = () => {
     ]);
     
     const {data:session}=useSession()
+    const [loading, setLoading] = useState(true);
 
 
 
@@ -37,6 +42,7 @@ const Page: React.FC = () => {
 
     useEffect(()=>{
         const getPossessions=async ()=>{
+            setLoading(true)
             try{
                 const response=await fetch(`${url}/patrimoines/patrimoine/possessions?email=${session?.user?.email}`)
                 if(!response.ok){
@@ -44,6 +50,7 @@ const Page: React.FC = () => {
                 }
                 const data=await response.json()
                 setPossessions(data)
+                setLoading(false)
             }catch(e){
                 console.log(e);
                 
@@ -65,9 +72,36 @@ const Page: React.FC = () => {
                 </DialogBoilerplate >
             </div>
             <div className="w-full space-y-4 mt-10">
-                {possessions.map((possession, index) => (
-                    <PossessionItem possession={possession} key={index} />
-                ))}
+            {loading ? ( // Vérifie si les données sont en cours de chargement
+                        <div className="flex justify-center items-center">
+                            <svg
+                                className="animate-spin h-20 w-20 text-blue-600" // Tailwind pour le spinner
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                role="status"
+                            >
+                                <path
+                                    d="M4 12a8 8 0 1 1 8 8v-2a6 6 0 1 0-6-6H4z"
+                                    className="text-gray-200"
+                                    stroke="currentColor"
+                                    strokeWidth="2"
+                                />
+                                <path
+                                    d="M12 4V2M12 22v-2M22 12h-2M4 12H2"
+                                    className="text-gray-600"
+                                    stroke="currentColor"
+                                    strokeWidth="2"
+                                />
+                            </svg>
+                        </div>
+                    ) : possessions.length === 0 ? (
+                        <div className="text-center text-gray-500 mt-6">Aucun bien matériel n a encore été ajouté.</div>
+                    ) : (
+                        possessions.map((possession, index) => (
+                            <PossessionItem possession={possession} key={index} />
+                        ))
+                    )}
             </div>
 
            
@@ -87,6 +121,7 @@ const PossessionItem: React.FC<{ possession: Possession }> = ({ possession }) =>
             if (!response.ok) {
                 throw new Error("Failed to delete possession");
             }
+            window.location.href="/dashboard/biens"
            
         } catch (error) {
             console.error("Error deleting possession:", error);
@@ -110,7 +145,28 @@ const PossessionItem: React.FC<{ possession: Possession }> = ({ possession }) =>
                     
                 </div>
                 <div className="">
-                    <button onClick={deletePossession} className="text-red-500"><Trash2/></button>
+                <Dialog>
+                    <DialogTrigger asChild>
+                        
+                        <Button variant="outline" className="text-red-500 border-none"><Trash2/></Button>
+                    </DialogTrigger>
+                    <DialogContent className="sm:max-w-[425px] flex flex-col gap-2 h-auto overflow-auto">
+                        <DialogHeader>
+                        <DialogTitle className="text-center"></DialogTitle>
+                        </DialogHeader>
+                        <div className="flex flex-col gap-6 mt-6 justify-center">
+                            <div className="text-center">
+                                etes-vous sure de supprimer cette possession?
+                            </div>
+                            <div className="flex flex-row space-x-32 text-center justify-center">
+                                <DialogClose>non</DialogClose>
+                                <p className="cursor-pointer" onClick={deletePossession}>oui</p>
+
+                            </div>
+                        </div>
+                    </DialogContent>
+                </Dialog>
+                    
                 </div>
         </div>
     )

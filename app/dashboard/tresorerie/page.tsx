@@ -5,6 +5,7 @@ import { DialogBoilerplate } from "@/components/dialog";
 import { useSession } from "next-auth/react";
 
 import CreateMoneyForm from "@/components/possessions/argent/create-form";
+import { set } from "zod";
 interface Devise{
     "nom": string,
     "valeurEnAriary": number,
@@ -25,6 +26,7 @@ const Page: React.FC = () => {
     const [possessions, setPossessions] = useState<Argent[]>([
       
     ]);
+    const [loading, setLoading] = useState<boolean>(true); 
     
     const {data:session}=useSession()
 
@@ -37,6 +39,7 @@ const Page: React.FC = () => {
 
     useEffect(()=>{
         const getPossessions=async ()=>{
+            setLoading(true)
             try{
                 const response=await fetch(`${url}/patrimoines/argents?email=${session?.user?.email}`)
                 if(!response.ok){
@@ -44,6 +47,7 @@ const Page: React.FC = () => {
                 }
                 const data=await response.json()
                 setPossessions(data)
+                setLoading(false)
             }catch(e){
                 console.log(e);
                 
@@ -65,9 +69,36 @@ const Page: React.FC = () => {
                 </DialogBoilerplate >
             </div>
             <div className="w-full space-y-4 mt-10">
-                {possessions.map((possession, index) => (
-                    <PossessionItem possession={possession} key={index} />
-                ))}
+            {loading ? ( // Affiche le message de chargement
+                        <div className="flex justify-center items-center">
+                        <svg
+                            className="animate-spin h-20 w-20 text-blue-600" // Tailwind pour le spinner
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            role="status"
+                        >
+                            <path
+                                d="M4 12a8 8 0 1 1 8 8v-2a6 6 0 1 0-6-6H4z"
+                                className="text-gray-200"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                            />
+                            <path
+                                d="M12 4V2M12 22v-2M22 12h-2M4 12H2"
+                                className="text-gray-600"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                            />
+                        </svg>
+                    </div>
+                    ) : possessions.length === 0 ? ( // Affiche le message si pas de données
+                        <div className="text-center">Pas de trésoreries disponibles.</div>
+                    ) : (
+                        possessions.map((possession, index) => (
+                            <PossessionItem possession={possession} key={index} />
+                        ))
+                    )}
             </div>
 
            
