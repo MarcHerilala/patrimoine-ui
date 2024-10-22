@@ -2,49 +2,37 @@ import { Calendar, DollarSign, Clock, FileText, TrendingDown } from 'lucide-reac
 import { DialogBoilerplate } from "@/components/dialog";
 
 import CreateFuxForm from '@/components/possessions/flux-argent/create-form';
+import { useEffect, useState } from 'react';
+import { url } from '@/lib/api-url';
+import { useSession } from 'next-auth/react';
+import { set } from 'zod';
 
 export default function FluxList() {
-  const fluxData = [
-    {
-      nom: "payment_ecolage_hei",
-      debut: "2024-10-20",
-      fin: "2025-05-25",
-      fluxMensuel: -220000,
-      dateOperation: 25,
-      devise: {
-        nom: "ARIARY",
-        valeurEnAriary: 1,
-        tauxDappréciationAnnuel: 0.0
-      },
-      valeurComptable: 0
-    },
-    {
-      nom: "revenu_projet_freelance",
-      debut: "2024-09-01",
-      fin: "2024-09-30",
-      fluxMensuel: 500000,
-      dateOperation: 10,
-      devise: {
-        nom: "ARIARY",
-        valeurEnAriary: 1,
-        tauxDappréciationAnnuel: 0.0
-      },
-      valeurComptable: 0
-    },
-    {
-      nom: "achat_materiel_bureau",
-      debut: "2024-08-01",
-      fin: "2024-12-31",
-      fluxMensuel: -150000,
-      dateOperation: 5,
-      devise: {
-        nom: "ARIARY",
-        valeurEnAriary: 1,
-        tauxDappréciationAnnuel: 0.0
-      },
-      valeurComptable: 0
+
+  const [fluxData, setFluxData] = useState<Flux[]>([]);
+  const {data:session}=useSession()
+
+  useEffect(()=>{
+const getFLuxList=async()=>{
+  try{
+    const response=await fetch(`${url}/patirmoines/fluxArgents?email=${session?.user?.email}`)
+    if(!response.ok){
+      throw new Error("error while fetching data")
     }
-  ];
+    const data=await response.json()
+    setFluxData(data)
+    console.log(data);
+    
+  }catch(e){
+    console.log(e)
+    ;}
+
+}
+if(!session){
+  return
+}
+getFLuxList()
+  },[session])
 
   return (
    <div className='bg-gray-50 h-full p-2'>
@@ -55,9 +43,10 @@ export default function FluxList() {
         </div>
 
         <div className="grid grid-cols-3 gap-6 pt-10">
-            {fluxData.map((flux, index) => (
+            {fluxData&&fluxData.map((flux, index) => (
                 <FluxCard key={index} flux={flux} />
             ))}
+            
         </div>
    </div>
   );
