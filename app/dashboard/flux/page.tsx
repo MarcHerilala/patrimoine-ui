@@ -95,8 +95,13 @@ function FluxCard({ flux }: { flux: Flux }) {
       <div className="flex items-center space-x-2">
         <DollarSign className={`text-[#0E0F2F] ${flux.fluxMensuel < 0 ? 'text-red-500' : 'text-green-500'}`} />
         <span className={`text-lg ${flux.fluxMensuel < 0 ? 'text-red-500' : 'text-green-500'}`}>
-          {flux.fluxMensuel.toLocaleString()} {flux.devise.nom}
+          {flux.fluxMensuel.toLocaleString()} 
         </span>
+      </div>
+       {/* Devise */}
+       <div className="flex items-center space-x-2">
+        <DollarSign className="text-[#0E0F2F]" />
+        <span className="text-[#0E0F2F]">Devise : {flux.devise.nom} </span>
       </div>
 
       {/* Date de l'opération */}
@@ -105,17 +110,9 @@ function FluxCard({ flux }: { flux: Flux }) {
         <span className="text-[#0E0F2F]">Jour d opération : {flux.dateOperation}</span>
       </div>
 
-      {/* Devise */}
-      <div className="flex items-center space-x-2">
-        <DollarSign className="text-[#0E0F2F]" />
-        <span className="text-[#0E0F2F]">Devise : {flux.devise.nom} </span>
-      </div>
+     
 
-      {/* Valeur Comptable */}
-      <div className="flex items-center space-x-2">
-        <TrendingDown className="text-gray-500" />
-        <span className="text-[#0E0F2F]">Valeur Comptable : {flux.valeurComptable}</span>
-      </div>
+     
     </div>
   );
 }
