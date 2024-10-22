@@ -1,3 +1,4 @@
+"use client"
 import { Calendar, DollarSign, Clock, FileText, TrendingDown } from 'lucide-react';
 import { DialogBoilerplate } from "@/components/dialog";
 
