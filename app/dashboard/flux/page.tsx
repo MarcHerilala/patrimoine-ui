@@ -16,7 +16,7 @@ export default function FluxList() {
   useEffect(()=>{
 const getFLuxList=async()=>{
   try{
-    const response=await fetch(`${url}/patirmoines/fluxArgents?email=${session?.user?.email}`)
+    const response=await fetch(`${url}/patrimoines/fluxArgents?email=${session?.user?.email}`)
     if(!response.ok){
       throw new Error("error while fetching data")
     }
