@@ -85,7 +85,7 @@ export default function CreateFuxForm() {
                     restValues.fluxMensuel = -restValues.fluxMensuel;
                 }
                             
-            const response = await fetch(`${url}/patrimoines/patrimoine/possessions/fluxArgent?argent=${argent}&email=${session?.user?.email}`, {
+            const response = await fetch(`${url}/patrimoines/possessions/fluxArgent?argent=${argent}&email=${session?.user?.email}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
