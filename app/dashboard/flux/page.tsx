@@ -8,16 +8,16 @@ import { url } from '@/lib/api-url';
 import { useSession } from 'next-auth/react';
 import useSWR from 'swr';
 import { Loading } from '@/components/loading';
+import { jsonFetcher } from '@/lib/fetch-utls';
 
 export default function FluxList() {
 
   const {data:session}=useSession()
-  const fetcher=(url:string)=>fetch(url).then((res)=>res.json())
 
   const {data:fluxData, error,isLoading}=useSWR<Flux[]>(
     session?.user?.email?`${url}/patrimoines/fluxArgents?email=${session?.user?.email}`:
     null,
-    fetcher,
+    jsonFetcher,
     {
       onError: (error) => {
         return (<div>error while fetching data</div>)

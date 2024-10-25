@@ -11,6 +11,7 @@ import { DialogHeader } from "@/components/ui/dialog";
 import { Dialog, DialogTrigger, DialogContent, DialogTitle ,DialogClose} from "@/components/ui/dialog"
 import useSWR from "swr";
 import { Loading } from "@/components/loading";
+import { jsonFetcher } from "@/lib/fetch-utls";
 interface Devise{
     "nom": string,
     "valeurEnAriary": number,
@@ -35,12 +36,12 @@ const Page: React.FC = () => {
 
 
    
-    const fetcher=(url:string)=>fetch(url).then((res)=>res.json())
+
 
     const {data:possessions, error,isLoading}=useSWR<Possession[]>(
         session?.user?.email?`${url}/patrimoines/patrimoine/possessions?email=${session?.user?.email}`:
         null,
-        fetcher,
+        jsonFetcher,
         
             {
                 onError: (error) => {

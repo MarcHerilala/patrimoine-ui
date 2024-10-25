@@ -4,6 +4,7 @@ import { useSession } from "next-auth/react";
 import useSWR from "swr";
 import { url } from "@/lib/api-url";
 import { Loading } from "@/components/loading";
+import { blobFetcher } from "@/lib/fetch-utls";
 const PatrimonyEvolution = () => {
   const [dateInterval, setDateInterval] = useState({
     begin: new Date().toISOString().split("T")[0],
@@ -30,12 +31,11 @@ const PatrimonyEvolution = () => {
   };
 
 
-  const fetcher=(url:string)=>fetch(url).then((res)=>res.blob())
 
   const {data:imageBlob, error,isLoading}=useSWR(
     session?.user?.email?`${url}/patrimoines/patrimoine/graphe?email=${session?.user?.email}&debut=${dateInterval.begin}&fin=${dateInterval.end}`:
     null,
-    fetcher)
+    blobFetcher,)
 
     const image=imageBlob?URL.createObjectURL(imageBlob):null
 

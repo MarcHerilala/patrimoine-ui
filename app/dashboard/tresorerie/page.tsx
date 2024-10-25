@@ -5,6 +5,7 @@ import { DialogBoilerplate } from "@/components/dialog";
 import { useSession } from "next-auth/react";
 
 import CreateMoneyForm from "@/components/possessions/argent/create-form";
+import { jsonFetcher } from "@/lib/fetch-utls";
 import useSWR from "swr";
 interface Devise{
     "nom": string,
@@ -31,11 +32,10 @@ const Page: React.FC = () => {
 
 
 
-   const fetcher=(url:string)=>fetch(url).then((res)=>res.json())
    const {data:possessions, error,isLoading}=useSWR<Argent[]>(
          session?.user?.email?`${url}/patrimoines/argents?email=${session?.user?.email}`:
          null,
-         fetcher,
+         jsonFetcher,
          
               {
                 onError: (error) => {

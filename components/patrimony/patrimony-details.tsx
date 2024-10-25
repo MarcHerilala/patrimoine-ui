@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useEffect } from "react";
 import { url } from "@/lib/api-url";
 import useSWR from "swr";
+import { jsonFetcher } from "@/lib/fetch-utls";
 
 export type PatrimonyType={
     nom:string,
@@ -23,12 +24,11 @@ const PatrimonyDetails=()=>{
     setDate(e.target.value)
   }
 
-  const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
 
   const { data:patrimony, isLoading } = useSWR<PatrimonyType>(
     session?.user?.email ? `${url}/patrimoines/patrimoine?email=${session.user.email}&date=${date}` : null,
-    fetcher,
+    jsonFetcher,
     {
       onError: (error) => {
         console.error("Error fetching patrimony:", error);
