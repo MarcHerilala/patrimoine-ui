@@ -1,22 +1,24 @@
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
-
+import useSWR from "swr";
+import { url } from "@/lib/api-url";
+import { Loading } from "@/components/loading";
 const PatrimonyEvolution = () => {
   const [dateInterval, setDateInterval] = useState({
     begin: new Date().toISOString().split("T")[0],
     end: new Date(new Date().setDate(new Date().getDate() + 1)).toISOString().split("T")[0],
   });
-  const [loading, setLoading] = useState(true); // État de chargement
   const { data: session } = useSession();
-  const [image, setImage] = useState<string>("");
+  //const [image, setImage] = useState<string>("");
+
 
   const onBeginDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setDateInterval((prevState) => ({
       ...prevState,
       begin: e.target.value,
     }));
-    setLoading(true); // Remettre à true pour déclencher le chargement
+
   };
 
   const onEndDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -24,35 +26,24 @@ const PatrimonyEvolution = () => {
       ...prevState,
       end: e.target.value,
     }));
-    setLoading(true); // Remettre à true pour déclencher le chargement
+
   };
 
-  useEffect(() => {
-    const fetchImage = async () => {
-      try {
-        if(!session?.user?.email) return;
-        const response = await fetch(
-          `https://hcwq374pyj.execute-api.eu-west-3.amazonaws.com/Prod/patrimoines/patrimoine/graphe?email=${session?.user?.email}&debut=${dateInterval.begin}&fin=${dateInterval.end}`
-        );
-        if (!response.ok) {
-          throw new Error("Failed to fetch image");
-        }
 
-        // Convertir la réponse en blob (image binaire)
-        const blob = await response.blob();
+  const fetcher=(url:string)=>fetch(url).then((res)=>res.blob())
 
-        // Créer une URL locale pour l'image à partir du blob
-        const imageUrl = URL.createObjectURL(blob);
-        setImage(imageUrl);
+  const {data:imageBlob, error,isLoading}=useSWR(
+    session?.user?.email?`${url}/patrimoines/patrimoine/graphe?email=${session?.user?.email}&debut=${dateInterval.begin}&fin=${dateInterval.end}`:
+    null,
+    fetcher)
 
-        setLoading(false); // Désactiver l'état de chargement
-      } catch (error) {
-        console.error("Error fetching patrimony image:", error);
-      }
-    };
+    const image=imageBlob?URL.createObjectURL(imageBlob):null
 
-    fetchImage();
-  }, [dateInterval.begin, dateInterval.end, session]);
+
+    if(error){
+      return <div>error while fetching data</div>
+    }
+
 
   return (
     <div className="bg-white shadow-md rounded-lg p-6">
@@ -79,33 +70,14 @@ const PatrimonyEvolution = () => {
       </div>
 
       <div className="mt-6">
-        {loading && (
+        {isLoading && (
          
-          <div className="  col-span-1 md:col-span-3 flex justify-center mt-40 w-full h-[700px] ">
-          <svg
-              className="animate-spin h-20 w-20 text-blue-600" // Tailwind pour le spinner
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              role="status"
-          >
-              <path
-                  d="M4 12a8 8 0 1 1 8 8v-2a6 6 0 1 0-6-6H4z"
-                  className="text-gray-200"
-                  stroke="currentColor"
-                  strokeWidth="2"
-              />
-              <path
-                  d="M12 4V2M12 22v-2M22 12h-2M4 12H2"
-                  className="text-gray-600"
-                  stroke="currentColor"
-                  strokeWidth="2"
-              />
-          </svg>
-      </div>
+          <div className="h-[300px] md:h-[700px]">
+            <div className="mt-28"><Loading /></div>
+          </div>
         )}
 
-        {!loading && image && (
+        {!isLoading && image && (
           <Image
             src={image}
             className="w-full h-[300px] md:h-[700px] rounded-md shadow-lg"

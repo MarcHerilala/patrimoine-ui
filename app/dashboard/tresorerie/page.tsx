@@ -5,13 +5,14 @@ import { DialogBoilerplate } from "@/components/dialog";
 import { useSession } from "next-auth/react";
 
 import CreateMoneyForm from "@/components/possessions/argent/create-form";
-import { set } from "zod";
+import useSWR from "swr";
 interface Devise{
     "nom": string,
     "valeurEnAriary": number,
     "t": string,
     "tauxDappréciationAnnuel": number
 }
+import { Loading } from "@/components/loading";
 
 interface Argent {
     nom: string;
@@ -23,41 +24,29 @@ interface Argent {
 }
 
 const Page: React.FC = () => {
-    const [possessions, setPossessions] = useState<Argent[]>([
-      
-    ]);
-    const [loading, setLoading] = useState<boolean>(true); 
+  
     
     const {data:session}=useSession()
 
 
 
 
-   
-    
+   const fetcher=(url:string)=>fetch(url).then((res)=>res.json())
+   const {data:possessions, error,isLoading}=useSWR<Argent[]>(
+         session?.user?.email?`${url}/patrimoines/argents?email=${session?.user?.email}`:
+         null,
+         fetcher,
+         
+              {
+                onError: (error) => {
+                  return (<div>error while fetching data</div>)
+                }
+                 }
+         
+    )   
+      
     
 
-    useEffect(()=>{
-        const getPossessions=async ()=>{
-            setLoading(true)
-            try{
-                const response=await fetch(`${url}/patrimoines/argents?email=${session?.user?.email}`)
-                if(!response.ok){
-                    throw new Error("error while fetching data")
-                }
-                const data=await response.json()
-                setPossessions(data)
-                setLoading(false)
-            }catch(e){
-                console.log(e);
-                
-            }
-        }
-        if(!session){
-            return
-        }
-        getPossessions()
-    },[session])
     return (
 <div className="bg-gray-50 h-full">
       
@@ -69,33 +58,12 @@ const Page: React.FC = () => {
                 </DialogBoilerplate >
             </div>
             <div className="w-full space-y-4 mt-10">
-            {loading ? ( // Affiche le message de chargement
-                        <div className="flex justify-center items-center">
-                        <svg
-                            className="animate-spin h-20 w-20 text-blue-600" // Tailwind pour le spinner
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            role="status"
-                        >
-                            <path
-                                d="M4 12a8 8 0 1 1 8 8v-2a6 6 0 1 0-6-6H4z"
-                                className="text-gray-200"
-                                stroke="currentColor"
-                                strokeWidth="2"
-                            />
-                            <path
-                                d="M12 4V2M12 22v-2M22 12h-2M4 12H2"
-                                className="text-gray-600"
-                                stroke="currentColor"
-                                strokeWidth="2"
-                            />
-                        </svg>
-                    </div>
-                    ) : possessions.length === 0 ? ( // Affiche le message si pas de données
+            {isLoading ? ( // Affiche le message de chargement
+                        <Loading />
+                    ) : possessions?.length === 0 ? ( // Affiche le message si pas de données
                         <div className="text-center">Pas de trésoreries disponibles.</div>
                     ) : (
-                        possessions.map((possession, index) => (
+                        possessions?.map((possession, index) => (
                             <PossessionItem possession={possession} key={index} />
                         ))
                     )}
@@ -110,19 +78,7 @@ const Page: React.FC = () => {
 const PossessionItem: React.FC<{ possession: Argent }> = ({ possession }) => {
     const {data:session}=useSession()
 
-    /*const deletePossession = async () => {
-        try {
-            const response = await fetch(`${url}/patrimoines/possessions/${possession.nom}?email=${session?.user?.email}`, {
-                method: 'DELETE',
-            });
-            if (!response.ok) {
-                throw new Error("Failed to delete possession");
-            }
-           
-        } catch (error) {
-            console.error("Error deleting possession:", error);
-        }
-    }*/
+
     return(
         <div key={possession.nom} className="w-full bg-white shadow-lg rounded-lg overflow-hidden p-6 flex flex-row items-center justify-between">
                 <div>
@@ -140,13 +96,7 @@ const PossessionItem: React.FC<{ possession: Argent }> = ({ possession }) => {
                         
                     
                 </div>
-                {
-                    /*
-                    <div className="">
-                    <button onClick={deletePossession} className="text-red-500"><Trash2/></button>
-                </div>
-                    */
-                }
+            
         </div>
     )
 }

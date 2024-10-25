@@ -2,23 +2,18 @@ import { useSession } from "next-auth/react";
 import { useState } from "react";
 import { useEffect } from "react";
 import { url } from "@/lib/api-url";
+import useSWR from "swr";
 
-/*export type PatrimonyType={
+export type PatrimonyType={
     nom:string,
     t:string,
     valeurComptable:number
-}*/
+}
 const PatrimonyDetails=()=>{
 
   const { data: session, status } = useSession();
 
-  const [loading, setLoading] = useState(false);
 
-  const [patrimony, setPatrimony] = useState({
-    nom: "",
-    t: "",
-    valeurComptable:0
-  });
   const [date,setDate]=useState(new Date().toISOString().split('T')[0]);
 
   
@@ -28,32 +23,19 @@ const PatrimonyDetails=()=>{
     setDate(e.target.value)
   }
 
-  useEffect(() => {
-    // Fonction pour récupérer les données
-    const fetchData = async () => {
-      if (!session?.user?.email) return; 
-     
+  const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
-      try {
-        setLoading(true);
-        
-        const response = await fetch(`${url}/patrimoines/patrimoine?email=${session?.user?.email}&date=${date}`, { cache: 'no-store' });
-        console.log("you can se below the session user",session?.user?.email) ;
-        
-        if (!response.ok) {
-          throw new Error("Failed to fetch data");
-        }
-        const data = await response.json();
-        setLoading(false);
-        setPatrimony(data); // Stocke les données dans l'état local
-      } catch (error) {
+
+  const { data:patrimony, isLoading } = useSWR<PatrimonyType>(
+    session?.user?.email ? `${url}/patrimoines/patrimoine?email=${session.user.email}&date=${date}` : null,
+    fetcher,
+    {
+      onError: (error) => {
         console.error("Error fetching patrimony:", error);
         setError("Failed to load data.");
       }
-    };
-
-    fetchData();
-  }, [session,date]); // Dépend de session et de url
+    }
+  );
 
   const renderSkeleton = () => (
    <table className="table-auto w-full h-full">
@@ -87,12 +69,12 @@ const PatrimonyDetails=()=>{
           <h1 className="text-2xl font-semibold mb-4 text-[#161747]">Détails du Patrimoine</h1>
           <div className="border border-gray-300 rounded-md overflow-hidden h-[200px]">
             {
-              loading &&(
+              isLoading &&(
                 renderSkeleton()
               )
             }
             {
-              !loading &&(
+              !isLoading &&(
                 <table className="table-auto w-full">
               <thead>
                 <tr className="bg-transparent text-left">
@@ -103,15 +85,15 @@ const PatrimonyDetails=()=>{
               <tbody>
                 <tr>
                   <td className="border px-4 py-2 text-gray-800 bg-transparent">Nom:</td>
-                  <td className="border px-4 py-2 text-gray-800 bg-transparent font-medium">{patrimony.nom}</td>
+                  <td className="border px-4 py-2 text-gray-800 bg-transparent font-medium">{patrimony?.nom}</td>
                 </tr>
                 <tr>
                   <td className="border px-4 py-2 text-gray-800 bg-transparent">Date:</td>
-                  <td className="border px-4 py-2 text-gray-800 bg-transparent font-medium">{patrimony.t}</td>
+                  <td className="border px-4 py-2 text-gray-800 bg-transparent font-medium">{patrimony?.t}</td>
                 </tr>
                 <tr>
                   <td className="border px-4 py-2 text-gray-800 bg-transparent">Valeur Comptable:</td>
-                  <td className="border px-4 py-2 text-gray-800 bg-transparent font-medium">{patrimony.valeurComptable}</td>
+                  <td className="border px-4 py-2 text-gray-800 bg-transparent font-medium">{patrimony?.valeurComptable}</td>
                 </tr>
               </tbody>
             </table>

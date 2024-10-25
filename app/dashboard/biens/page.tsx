@@ -9,7 +9,8 @@ import CreateMaterialForm from "@/components/possessions/material/create-form";
 import { Button } from "@/components/ui/button";
 import { DialogHeader } from "@/components/ui/dialog";
 import { Dialog, DialogTrigger, DialogContent, DialogTitle ,DialogClose} from "@/components/ui/dialog"
-import { title } from "process";
+import useSWR from "swr";
+import { Loading } from "@/components/loading";
 interface Devise{
     "nom": string,
     "valeurEnAriary": number,
@@ -26,41 +27,29 @@ interface Possession {
 }
 
 const Page: React.FC = () => {
-    const [possessions, setPossessions] = useState<Possession[]>([
-      
-    ]);
+ 
     
     const {data:session}=useSession()
-    const [loading, setLoading] = useState(true);
 
 
 
 
    
-    
-    
+    const fetcher=(url:string)=>fetch(url).then((res)=>res.json())
 
-    useEffect(()=>{
-        const getPossessions=async ()=>{
-            setLoading(true)
-            try{
-                const response=await fetch(`${url}/patrimoines/patrimoine/possessions?email=${session?.user?.email}`)
-                if(!response.ok){
-                    throw new Error("error while fetching data")
+    const {data:possessions, error,isLoading}=useSWR<Possession[]>(
+        session?.user?.email?`${url}/patrimoines/patrimoine/possessions?email=${session?.user?.email}`:
+        null,
+        fetcher,
+        
+            {
+                onError: (error) => {
+                  return (<div>error while fetching data</div>)
                 }
-                const data=await response.json()
-                setPossessions(data)
-                setLoading(false)
-            }catch(e){
-                console.log(e);
-                
-            }
-        }
-        if(!session){
-            return
-        }
-        getPossessions()
-    },[session])
+              }
+        
+    )   
+  
     return (
 <div className="bg-gray-50 h-full">
       
@@ -72,33 +61,12 @@ const Page: React.FC = () => {
                 </DialogBoilerplate >
             </div>
             <div className="w-full space-y-4 mt-10">
-            {loading ? ( // Vérifie si les données sont en cours de chargement
-                        <div className="flex justify-center items-center">
-                            <svg
-                                className="animate-spin h-20 w-20 text-blue-600" // Tailwind pour le spinner
-                                xmlns="http://www.w3.org/2000/svg"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                role="status"
-                            >
-                                <path
-                                    d="M4 12a8 8 0 1 1 8 8v-2a6 6 0 1 0-6-6H4z"
-                                    className="text-gray-200"
-                                    stroke="currentColor"
-                                    strokeWidth="2"
-                                />
-                                <path
-                                    d="M12 4V2M12 22v-2M22 12h-2M4 12H2"
-                                    className="text-gray-600"
-                                    stroke="currentColor"
-                                    strokeWidth="2"
-                                />
-                            </svg>
-                        </div>
-                    ) : possessions.length === 0 ? (
+            {isLoading ? ( // Vérifie si les données sont en cours de chargement
+                        <Loading/>
+                    ) : possessions?.length === 0 ? (
                         <div className="text-center text-gray-500 mt-6">Aucun bien matériel n a encore été ajouté.</div>
                     ) : (
-                        possessions.map((possession, index) => (
+                        possessions?.map((possession, index) => (
                             <PossessionItem possession={possession} key={index} />
                         ))
                     )}
