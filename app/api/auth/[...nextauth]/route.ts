@@ -54,7 +54,7 @@ const authOptions: NextAuthOptions = {
   },
 
   jwt: {
-    secret: "this is the secret key of the auth",
+    secret: process.env.NEXTAUTH_SECRET,
   },
 
 
