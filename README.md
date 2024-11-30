@@ -1,22 +1,24 @@
 # Application de gestion de patrimoine
 
-Cette application est conçue pour faciliter la gestion des possessions que ce soit des matériels,financieres,ou flux financiere.
+Cette application est conçue pour faciliter la gestion des possessions, qu'elles soient matérielles, financières ou de flux financiers.
 
 
 
 ## Les fonctionnalités:
 
-* Projection  du futur valeur comptable du patrimoine.
+* Projection  de la valeur future du patrimoine.
     
-    Selectionner une date pour voir que vaut le patrimoine à tel date.
+    Selectionnez une date pour voir que vaut le patrimoine à cette date
 
 
 ![patrimoine-projection](public/patrimoine-projection.png)
 
-* Apercevoir l'evolution du patrimoine entre une intervalle de date.
+* Aperçu de l'evolution du patrimoine ainsi que des possessions entre une intervalle de date.
 
-    L'application affiche un graphe correspondant chaque intervalle.
+    L'application affiche un graphe correspondant chaque intervalle
 
 ![evolution-patrimoine](public/evolution.png)
+
+[Ici](https://patrimoine-three.vercel.app) l'url de l'application pour tester ces fonctionnalités.
 
 
