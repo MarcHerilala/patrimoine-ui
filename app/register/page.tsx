@@ -2,7 +2,6 @@
 import z from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-
 import { Button } from "@/components/ui/button";
 import {
     Form,
@@ -18,6 +17,7 @@ import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { url } from "@/lib/api-url";
 import { useState } from "react";
+import { User, Mail, Lock, UserPlus, Landmark } from "lucide-react";
 
 // Define your form schema with confirmation password validation
 const formSchema = z.object({
@@ -30,7 +30,7 @@ const formSchema = z.object({
     path: ["confirmPassword"], // Indique où afficher le message d'erreur
 });
 
-export default function Home() {
+export default function Register() {
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -40,13 +40,15 @@ export default function Home() {
             confirmPassword: "",
         },
     });
-    const [isLoading,setIsLoading]=useState(false)
-
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState("");
     const router = useRouter();
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
         try {
-            setIsLoading(true)
+            setIsLoading(true);
+            setError("");
+            
             const dataToSend = {
                 name: values.name,
                 email: values.email,
@@ -62,8 +64,7 @@ export default function Home() {
             });
 
             if (!response.ok) {
-                throw new Error('Network response was not ok');
-
+                throw new Error('Erreur lors de la création du compte');
             }
 
             const result = await signIn("credentials", {
@@ -73,26 +74,36 @@ export default function Home() {
             });
 
             if (result?.error) {
-                console.error("Erreur de connexion:", result.error);
-                // Afficher un message d'erreur à l'utilisateur
+                setError("Erreur de connexion après inscription");
+                setIsLoading(false);
             } else {
-                router.push("/patrimoine/create"); // Redirection vers l'URL souhaitée
-                setIsLoading(false)
+                router.push("/patrimoine/create");
+                setIsLoading(false);
             }
 
         } catch (error) {
             console.error('Error submitting form:', error);
-            // Handle error (e.g., show error message)
+            setError("Erreur lors de la création du compte");
+            setIsLoading(false);
         }
     }
 
     return (
-        <div className="container h-[calc(100vh-320px)]">
-            <div className="flex h-full flex-grow items-center justify-center">
-                <div className="mx-auto w-full max-w-[375px] mt-32">
-                    <div className="my-8">
-                        <h1 className="mb-2 text-3xl text-center text-[#161747] font-bold">Créer un compte</h1>
+        <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-blue-50 flex items-center justify-center p-4">
+            <div className="w-full max-w-md">
+                {/* Header */}
+                <div className="text-center mb-8 animate-fade-in-up">
+                    <div className="flex justify-center mb-4">
+                        <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-purple-600 to-blue-600 shadow-xl">
+                            <Landmark className="h-8 w-8 text-white" />
+                        </div>
                     </div>
+                    <h1 className="text-3xl font-bold text-gray-900 mb-2">Créer un compte</h1>
+                    <p className="text-gray-600">Rejoignez-nous pour gérer votre patrimoine</p>
+                </div>
+
+                {/* Form */}
+                <div className="bg-white/80 backdrop-blur-sm rounded-2xl border border-white/20 shadow-xl p-8 animate-slide-in-right">
                     <Form {...form}>
                         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                             <FormField
@@ -100,9 +111,17 @@ export default function Home() {
                                 name="name"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Nom</FormLabel>
+                                        <FormLabel className="text-gray-700 font-medium">Nom complet</FormLabel>
                                         <FormControl>
-                                            <Input type="text" placeholder="Nom" {...field} />
+                                            <div className="relative">
+                                                <User className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                                                <Input
+                                                    type="text"
+                                                    placeholder="Votre nom"
+                                                    className="pl-10 h-12 bg-gray-50 border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200"
+                                                    {...field}
+                                                />
+                                            </div>
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -114,9 +133,17 @@ export default function Home() {
                                 name="email"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Email</FormLabel>
+                                        <FormLabel className="text-gray-700 font-medium">Email</FormLabel>
                                         <FormControl>
-                                            <Input type="email" placeholder="name@gmail.com" {...field} />
+                                            <div className="relative">
+                                                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                                                <Input
+                                                    type="email"
+                                                    placeholder="votre@email.com"
+                                                    className="pl-10 h-12 bg-gray-50 border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200"
+                                                    {...field}
+                                                />
+                                            </div>
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -128,9 +155,17 @@ export default function Home() {
                                 name="password"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Mot de passe</FormLabel>
+                                        <FormLabel className="text-gray-700 font-medium">Mot de passe</FormLabel>
                                         <FormControl>
-                                            <Input type="password" {...field} />
+                                            <div className="relative">
+                                                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                                                <Input
+                                                    type="password"
+                                                    placeholder="••••••••"
+                                                    className="pl-10 h-12 bg-gray-50 border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200"
+                                                    {...field}
+                                                />
+                                            </div>
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -142,20 +177,60 @@ export default function Home() {
                                 name="confirmPassword"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Confirmer le mot de passe</FormLabel>
+                                        <FormLabel className="text-gray-700 font-medium">Confirmer le mot de passe</FormLabel>
                                         <FormControl>
-                                            <Input type="password" {...field} />
+                                            <div className="relative">
+                                                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                                                <Input
+                                                    type="password"
+                                                    placeholder="••••••••"
+                                                    className="pl-10 h-12 bg-gray-50 border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200"
+                                                    {...field}
+                                                />
+                                            </div>
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
                                 )}
                             />
-                              <Button className="w-full bg-[#0E0F2F]" type="submit">
-                                {isLoading?<p className="animate-spin rounded-full h-7 w-6 border-t-4 border-b-2 border-white"></p>:"connexion"}
+
+                            <Button 
+                                className="w-full h-12 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-medium rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-[1.02]" 
+                                type="submit"
+                                disabled={isLoading}
+                            >
+                                {isLoading ? (
+                                    <div className="flex items-center space-x-2">
+                                        <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                                        <span>Création...</span>
+                                    </div>
+                                ) : (
+                                    <div className="flex items-center space-x-2">
+                                        <UserPlus className="h-5 w-5" />
+                                        <span>Créer mon compte</span>
+                                    </div>
+                                )}
                             </Button>
                         </form>
                     </Form>
-                    <p className="text-center mt-5">Vous avez déjà un compte? <Link href={"/"} className="font-extrabold text-[#161747]">Connexion</Link></p>
+
+                    {error && (
+                        <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-xl">
+                            <p className="text-red-600 text-sm text-center">{error}</p>
+                        </div>
+                    )}
+
+                    <div className="mt-6 text-center">
+                        <p className="text-gray-600">
+                            Vous avez déjà un compte ?{" "}
+                            <Link 
+                                href="/" 
+                                className="font-semibold text-purple-600 hover:text-purple-700 transition-colors duration-200"
+                            >
+                                Se connecter
+                            </Link>
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>

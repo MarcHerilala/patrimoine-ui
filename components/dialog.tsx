@@ -9,6 +9,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import { ReactNode } from "react"
+import { Plus } from "lucide-react"
 
 // Définir les types des props
 interface DialogBoilerplateProps {
@@ -26,14 +27,16 @@ export function DialogBoilerplate({
   return (
     <Dialog>
       <DialogTrigger asChild>
-        
-          <Button variant="outline" className="bg-[#161747] text-white py-5 hover:bg-[#161747 hover:text-white] mt-6">{triggerText}</Button>
+        <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-medium px-6 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105">
+          <Plus className="h-4 w-4 mr-2" />
+          {triggerText}
+        </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px] flex flex-col gap-2 h-full overflow-auto">
+      <DialogContent className="sm:max-w-md bg-white/95 backdrop-blur-sm border border-white/20 shadow-2xl rounded-2xl">
         <DialogHeader>
-          <DialogTitle className="text-center">{title}</DialogTitle>
+          <DialogTitle className="text-center text-xl font-bold text-gray-900">{title}</DialogTitle>
         </DialogHeader>
-        <div className="grid gap-4 py-4">
+        <div className="py-4">
           {children} {/* Contenu dynamique comme des formulaires */}
         </div>
       </DialogContent>
